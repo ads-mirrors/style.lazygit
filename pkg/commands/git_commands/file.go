@@ -6,6 +6,7 @@ import (
 	"strings"
 
 	"github.com/go-errors/errors"
+	"github.com/jesseduffield/lazygit/pkg/commands/oscommands"
 	"github.com/jesseduffield/lazygit/pkg/config"
 	"github.com/jesseduffield/lazygit/pkg/utils"
 )
@@ -163,4 +164,13 @@ func (self *FileCommands) guessDefaultEditor() string {
 	}
 
 	return editor
+}
+
+func (self *FileCommands) OpenDiffToolCmdObj(commitSha string, filename string, isDirectory bool) oscommands.ICmdObj {
+	return self.cmd.New(NewGitCmd("difftool").
+		Arg("--no-prompt").
+		ArgIf(isDirectory, "--dir-diff").
+		Arg(commitSha+"^", commitSha).
+		Arg("--", filename).
+		ToArgv())
 }

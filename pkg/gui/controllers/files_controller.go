@@ -123,6 +123,11 @@ func (self *FilesController) GetKeybindings(opts types.KeybindingsOpts) []*types
 			Description: self.c.Tr.ToggleTreeView,
 		},
 		{
+			Key:         opts.GetKey(opts.Config.Universal.OpenDiffTool),
+			Handler:     self.checkSelectedFileNode(self.openDiffTool),
+			Description: self.c.Tr.OpenDiffTool,
+		},
+		{
 			Key:         opts.GetKey(opts.Config.Files.OpenMergeTool),
 			Handler:     self.c.Helpers().WorkingTree.OpenMergeTool,
 			Description: self.c.Tr.OpenMergeTool,
@@ -682,6 +687,12 @@ func (self *FilesController) Open() error {
 	}
 
 	return self.c.Helpers().Files.OpenFile(node.GetPath())
+}
+
+func (self *FilesController) openDiffTool(node *filetree.FileNode) error {
+	return self.c.RunSubprocessAndRefresh(
+		self.c.Git().WorkingTree.OpenDiffToolCmdObj(node.Path, !node.IsFile(), !node.GetHasUnstagedChanges()),
+	)
 }
 
 func (self *FilesController) switchToMerge() error {

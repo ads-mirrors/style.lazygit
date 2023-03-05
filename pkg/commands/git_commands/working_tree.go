@@ -27,6 +27,17 @@ func NewWorkingTreeCommands(
 	}
 }
 
+func (self *WorkingTreeCommands) OpenDiffToolCmdObj(
+	filename string, isDirectory bool, staged bool,
+) oscommands.ICmdObj {
+	return self.cmd.New(NewGitCmd("difftool").
+		Arg("--no-prompt").
+		ArgIf(isDirectory, "--dir-diff").
+		ArgIf(staged, "--cached").
+		Arg("--", filename).
+		ToArgv())
+}
+
 func (self *WorkingTreeCommands) OpenMergeToolCmdObj() oscommands.ICmdObj {
 	return self.cmd.New(NewGitCmd("mergetool").ToArgv())
 }

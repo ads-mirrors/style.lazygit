@@ -48,6 +48,11 @@ func (self *CommitFilesController) GetKeybindings(opts types.KeybindingsOpts) []
 			Description: self.c.Tr.EditFile,
 		},
 		{
+			Key:         opts.GetKey(opts.Config.Universal.OpenDiffTool),
+			Handler:     self.checkSelected(self.openDiffTool),
+			Description: self.c.Tr.OpenDiffTool,
+		},
+		{
 			Key:         opts.GetKey(opts.Config.Universal.Select),
 			Handler:     self.checkSelected(self.toggleForPatch),
 			Description: self.c.Tr.ToggleAddToPatch,
@@ -199,6 +204,12 @@ func (self *CommitFilesController) edit(node *filetree.CommitFileNode) error {
 	}
 
 	return self.c.Helpers().Files.EditFile(node.GetPath())
+}
+
+func (self *CommitFilesController) openDiffTool(node *filetree.CommitFileNode) error {
+	_, err := self.c.RunSubprocess(self.c.Git().File.OpenDiffToolCmdObj(
+		self.context().GetRef().RefName(), node.GetPath(), !node.IsFile()))
+	return err
 }
 
 func (self *CommitFilesController) toggleForPatch(node *filetree.CommitFileNode) error {
