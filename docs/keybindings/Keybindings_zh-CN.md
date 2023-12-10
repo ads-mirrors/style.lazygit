@@ -173,6 +173,7 @@ _Legend: `<c-b>` means ctrl+b, `<a-b>` means alt+b, `B` means shift+b_
   <kbd>d</kbd>: 放弃对此文件的提交更改
   <kbd>o</kbd>: 打开文件
   <kbd>e</kbd>: 编辑文件
+  <kbd>&lt;c-t&gt;</kbd>: Open external diff tool (git difftool)
   <kbd>&lt;space&gt;</kbd>: 补丁中包含的切换文件
   <kbd>a</kbd>: Toggle all files included in patch
   <kbd>&lt;enter&gt;</kbd>: 输入文件以将所选行添加到补丁中（或切换目录折叠）
@@ -210,6 +211,7 @@ _Legend: `<c-b>` means ctrl+b, `<a-b>` means alt+b, `B` means shift+b_
   <kbd>g</kbd>: 查看上游重置选项
   <kbd>D</kbd>: 查看重置选项
   <kbd>`</kbd>: 切换文件树视图
+  <kbd>&lt;c-t&gt;</kbd>: Open external diff tool (git difftool)
   <kbd>M</kbd>: 打开外部合并工具 (git mergetool)
   <kbd>f</kbd>: 抓取
   <kbd>/</kbd>: 开始搜索

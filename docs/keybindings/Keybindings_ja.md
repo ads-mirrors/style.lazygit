@@ -129,6 +129,7 @@ _Legend: `<c-b>` means ctrl+b, `<a-b>` means alt+b, `B` means shift+b_
   <kbd>d</kbd>: Discard this commit's changes to this file
   <kbd>o</kbd>: ファイルを開く
   <kbd>e</kbd>: ファイルを編集
+  <kbd>&lt;c-t&gt;</kbd>: Open external diff tool (git difftool)
   <kbd>&lt;space&gt;</kbd>: Toggle file included in patch
   <kbd>a</kbd>: Toggle all files included in patch
   <kbd>&lt;enter&gt;</kbd>: Enter file to add selected lines to the patch (or toggle directory collapsed)
@@ -204,6 +205,7 @@ _Legend: `<c-b>` means ctrl+b, `<a-b>` means alt+b, `B` means shift+b_
   <kbd>g</kbd>: View upstream reset options
   <kbd>D</kbd>: View reset options
   <kbd>`</kbd>: ファイルツリーの表示を切り替え
+  <kbd>&lt;c-t&gt;</kbd>: Open external diff tool (git difftool)
   <kbd>M</kbd>: Git mergetoolを開く
   <kbd>f</kbd>: Fetch
   <kbd>/</kbd>: 検索を開始

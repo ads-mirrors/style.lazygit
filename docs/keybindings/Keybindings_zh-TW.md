@@ -224,6 +224,7 @@ _說明：`<c-b>` 表示 Ctrl+B、`<a-b>` 表示 Alt+B，`B`表示 Shift+B_
   <kbd>d</kbd>: 捨棄此提交對此檔案的更改
   <kbd>o</kbd>: 開啟檔案
   <kbd>e</kbd>: 編輯檔案
+  <kbd>&lt;c-t&gt;</kbd>: Open external diff tool (git difftool)
   <kbd>&lt;space&gt;</kbd>: 切換檔案是否包含在補丁中
   <kbd>a</kbd>: 切換所有檔案是否包含在補丁中
   <kbd>&lt;enter&gt;</kbd>: 輸入檔案以將選定的行添加至補丁（或切換目錄折疊）
@@ -305,6 +306,7 @@ _說明：`<c-b>` 表示 Ctrl+B、`<a-b>` 表示 Alt+B，`B`表示 Shift+B_
   <kbd>g</kbd>: 檢視上游重設選項
   <kbd>D</kbd>: 檢視重設選項
   <kbd>`</kbd>: 切換檔案樹狀視圖
+  <kbd>&lt;c-t&gt;</kbd>: Open external diff tool (git difftool)
   <kbd>M</kbd>: 開啟外部合併工具 (git mergetool)
   <kbd>f</kbd>: 擷取
   <kbd>/</kbd>: 開始搜尋

@@ -291,6 +291,7 @@ _Legend: `<c-b>` means ctrl+b, `<a-b>` means alt+b, `B` means shift+b_
   <kbd>d</kbd>: Discard this commit's changes to this file
   <kbd>o</kbd>: 파일 닫기
   <kbd>e</kbd>: 파일 편집
+  <kbd>&lt;c-t&gt;</kbd>: Open external diff tool (git difftool)
   <kbd>&lt;space&gt;</kbd>: Toggle file included in patch
   <kbd>a</kbd>: Toggle all files included in patch
   <kbd>&lt;enter&gt;</kbd>: Enter file to add selected lines to the patch (or toggle directory collapsed)
@@ -341,6 +342,7 @@ _Legend: `<c-b>` means ctrl+b, `<a-b>` means alt+b, `B` means shift+b_
   <kbd>g</kbd>: View upstream reset options
   <kbd>D</kbd>: View reset options
   <kbd>`</kbd>: 파일 트리뷰로 전환
+  <kbd>&lt;c-t&gt;</kbd>: Open external diff tool (git difftool)
   <kbd>M</kbd>: Git mergetool를 열기
   <kbd>f</kbd>: Fetch
   <kbd>/</kbd>: 검색 시작
