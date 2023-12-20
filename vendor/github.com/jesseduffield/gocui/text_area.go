@@ -177,6 +177,10 @@ func (self *TextArea) GetContent() string {
 	return string(self.wrappedContent)
 }
 
+func (self *TextArea) GetUnwrappedContent() string {
+	return string(self.content)
+}
+
 func (self *TextArea) ToggleOverwrite() {
 	self.overwrite = !self.overwrite
 }
