@@ -37,7 +37,11 @@ var EnterNested = NewIntegrationTest(NewIntegrationTestArgs{
 			// enter the nested submodule
 			PressEnter()
 
-		t.Views().Status().Content(Contains("innerSubPath(innerSubName)"))
+		if t.Git().Version().IsAtLeast(2, 22, 0) {
+			t.Views().Status().Content(Contains("innerSubPath(innerSubName)"))
+		} else {
+			t.Views().Status().Content(Contains("innerSubPath"))
+		}
 		t.Views().Commits().ContainsLines(
 			Contains("initial inner commit"),
 		)
