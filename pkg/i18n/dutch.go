@@ -333,5 +333,8 @@ func dutchTranslationSet() TranslationSet {
 		ViewBulkSubmoduleOptions:            "Bekijk bulk submodule opties",
 		CreatePullRequestOptions:            "Bekijk opties voor pull-aanvraag",
 		ConfirmRevertCommit:                 "Weet u zeker dat u {{.selectedCommit}} ongedaan wilt maken?",
+		BreakingChangesByVersion: map[string]string{
+			"0.40.0": "- Een ouder bericht, alleen om te testen", // to be removed
+		},
 	}
 }
