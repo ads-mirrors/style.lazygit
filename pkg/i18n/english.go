@@ -770,6 +770,9 @@ type TranslationSet struct {
 	Actions                              Actions
 	Bisect                               Bisect
 	Log                                  Log
+	BreakingChangesTitle                 string
+	BreakingChangesMessage               string
+	BreakingChangesByVersion             map[string]string
 }
 
 type Bisect struct {
@@ -1859,6 +1862,14 @@ func EnglishTranslationSet() TranslationSet {
 			CreateFileWithContent:    "Creating file '{{.path}}'",
 			AppendingLineToFile:      "Appending '{{.line}}' to file '{{.filename}}'",
 			EditRebaseFromBaseCommit: "Beginning interactive rebase from '{{.baseCommit}}' onto '{{.targetBranchName}}",
+		},
+		BreakingChangesTitle: "Breaking Changes",
+		BreakingChangesMessage: `You are updating to a new version of lazygit which contains breaking changes. Please review the notes below and update your configuration if necessary.
+For more information, see the full release notes at <https://github.com/jesseduffield/lazygit/releases>.`,
+		BreakingChangesByVersion: map[string]string{
+			"0.40.0": "- Some older message, just for testing", // to be removed
+			"0.41.0": `- The 'c' key is no longer the default key for copying commits to cherry pick. Bla bla bla
+- Squashing fixups using shift-S brings up a menu, and squashes all fixups in current branch if you hit enter`,
 		},
 	}
 }
