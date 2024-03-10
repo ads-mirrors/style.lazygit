@@ -96,7 +96,7 @@ func (self *FilteredList[T]) applyFilter() {
 			getFilterFields: self.getFilterFields,
 		}
 
-		matches := fuzzy.FindFrom(self.filter, source)
+		matches := utils.FindFrom(self.filter, source)
 		self.filteredIndices = lo.Map(matches, func(match fuzzy.Match, _ int) int {
 			return match.Index
 		})

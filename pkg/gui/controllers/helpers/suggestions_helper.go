@@ -3,6 +3,7 @@ package helpers
 import (
 	"fmt"
 	"os"
+	"strings"
 
 	"github.com/jesseduffield/gocui"
 	"github.com/jesseduffield/lazygit/pkg/commands/models"
@@ -128,13 +129,26 @@ func (self *SuggestionsHelper) GetFilePathSuggestionsFunc() func(string) []*type
 
 	return func(input string) []*types.Suggestion {
 		matchingNames := []string{}
-		_ = self.c.Model().FilesTrie.VisitFuzzy(patricia.Prefix(input), true, func(prefix patricia.Prefix, item patricia.Item, skipped int) error {
-			matchingNames = append(matchingNames, item.(string))
-			return nil
-		})
+		if strings.HasPrefix(input, "~") {
+			_ = self.c.Model().FilesTrie.VisitFuzzy(patricia.Prefix(input[1:]), true, func(prefix patricia.Prefix, item patricia.Item, skipped int) error {
+				matchingNames = append(matchingNames, item.(string))
+				return nil
+			})
 
-		// doing another fuzzy search for good measure
-		matchingNames = utils.FuzzySearch(input, matchingNames)
+			// doing another fuzzy search for good measure
+			matchingNames = utils.FuzzySearch(input, matchingNames)
+		} else {
+			substrings := strings.Fields(input)
+			_ = self.c.Model().FilesTrie.Visit(func(prefix patricia.Prefix, item patricia.Item) error {
+				for _, sub := range substrings {
+					if !utils.CaseAwareContains(item.(string), sub) {
+						return nil
+					}
+				}
+				matchingNames = append(matchingNames, item.(string))
+				return nil
+			})
+		}
 
 		return matchesToSuggestions(matchingNames)
 	}

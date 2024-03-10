@@ -12,11 +12,60 @@ func FuzzySearch(needle string, haystack []string) []string {
 		return []string{}
 	}
 
-	matches := fuzzy.Find(needle, haystack)
+	matches := Find(needle, haystack)
 
 	return lo.Map(matches, func(match fuzzy.Match, _ int) string {
 		return match.Str
 	})
+}
+
+// Duplicated from the fuzzy package because it's private there
+type stringSource []string
+
+func (ss stringSource) String(i int) string {
+	return ss[i]
+}
+
+func (ss stringSource) Len() int { return len(ss) }
+
+// Drop-in replacement for fuzzy.Find (except that it doesn't fill out
+// MatchedIndexes or Score, but we are not using these)
+func FindSubstrings(pattern string, data []string) fuzzy.Matches {
+	return FindSubstringsFrom(pattern, stringSource(data))
+}
+
+// Drop-in replacement for fuzzy.FindFrom (except that it doesn't fill out
+// MatchedIndexes or Score, but we are not using these)
+func FindSubstringsFrom(pattern string, data fuzzy.Source) fuzzy.Matches {
+	substrings := strings.Fields(pattern)
+	result := fuzzy.Matches{}
+
+outer:
+	for i := 0; i < data.Len(); i++ {
+		s := data.String(i)
+		for _, sub := range substrings {
+			if !CaseAwareContains(s, sub) {
+				continue outer
+			}
+		}
+		result = append(result, fuzzy.Match{Str: s, Index: i})
+	}
+
+	return result
+}
+
+func Find(pattern string, data []string) fuzzy.Matches {
+	if strings.HasPrefix(pattern, "~") {
+		return fuzzy.Find(pattern[1:], data)
+	}
+	return FindSubstrings(pattern, data)
+}
+
+func FindFrom(pattern string, data fuzzy.Source) fuzzy.Matches {
+	if strings.HasPrefix(pattern, "~") {
+		return fuzzy.FindFrom(pattern[1:], data)
+	}
+	return FindSubstringsFrom(pattern, data)
 }
 
 func CaseAwareContains(haystack, needle string) bool {
