@@ -171,7 +171,12 @@ func (self *BasicCommitsController) copyCommitAttribute(commit *models.Commit) e
 
 func (self *BasicCommitsController) copyCommitSHAToClipboard(commit *models.Commit) error {
 	self.c.LogAction(self.c.Tr.Actions.CopyCommitSHAToClipboard)
-	if err := self.c.OS().CopyToClipboard(commit.Sha); err != nil {
+	sha := commit.Sha
+	maxWidth := self.c.UserConfig.Git.TruncateCopiedCommitHashesTo
+	if maxWidth > 0 {
+		sha = sha[:utils.Min(len(sha), maxWidth)]
+	}
+	if err := self.c.OS().CopyToClipboard(sha); err != nil {
 		return self.c.Error(err)
 	}
 
