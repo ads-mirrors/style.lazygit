@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"path/filepath"
 	"strings"
+	"time"
 
 	"github.com/fsmiamoto/git-todo-parser/todo"
 	"github.com/go-errors/errors"
@@ -310,6 +311,11 @@ func (self *RebaseCommands) DeleteUpdateRefTodos(commits []*models.Commit) error
 }
 
 func (self *RebaseCommands) MoveTodosDown(commits []*models.Commit) error {
+	t := time.Now()
+	defer func() {
+		self.Log.Infof("MoveTodosDown took %s", time.Since(t))
+	}()
+
 	fileName := filepath.Join(self.repoPaths.WorktreeGitDirPath(), "rebase-merge/git-rebase-todo")
 	todosToMove := lo.Map(commits, func(commit *models.Commit, _ int) utils.Todo {
 		return todoFromCommit(commit)
@@ -319,6 +325,11 @@ func (self *RebaseCommands) MoveTodosDown(commits []*models.Commit) error {
 }
 
 func (self *RebaseCommands) MoveTodosUp(commits []*models.Commit) error {
+	t := time.Now()
+	defer func() {
+		self.Log.Infof("MoveTodosUp took %s", time.Since(t))
+	}()
+
 	fileName := filepath.Join(self.repoPaths.WorktreeGitDirPath(), "rebase-merge/git-rebase-todo")
 	todosToMove := lo.Map(commits, func(commit *models.Commit, _ int) utils.Todo {
 		return todoFromCommit(commit)
