@@ -33,6 +33,7 @@ const (
 	DaemonKindUnknown DaemonKind = iota
 
 	DaemonKindExitImmediately
+	DaemonKindFixTodosFile
 	DaemonKindCherryPick
 	DaemonKindMoveTodosUp
 	DaemonKindMoveTodosDown
@@ -54,6 +55,7 @@ func getInstruction() Instruction {
 
 	mapping := map[DaemonKind]func(string) Instruction{
 		DaemonKindExitImmediately:     deserializeInstruction[*ExitImmediatelyInstruction],
+		DaemonKindFixTodosFile:        deserializeInstruction[*FixTodosFileInstruction],
 		DaemonKindCherryPick:          deserializeInstruction[*CherryPickCommitsInstruction],
 		DaemonKindChangeTodoActions:   deserializeInstruction[*ChangeTodoActionsInstruction],
 		DaemonKindMoveFixupCommitDown: deserializeInstruction[*MoveFixupCommitDownInstruction],
@@ -155,6 +157,26 @@ func (self *ExitImmediatelyInstruction) run(common *common.Common) error {
 
 func NewExitImmediatelyInstruction() Instruction {
 	return &ExitImmediatelyInstruction{}
+}
+
+type FixTodosFileInstruction struct{}
+
+func (self *FixTodosFileInstruction) Kind() DaemonKind {
+	return DaemonKindFixTodosFile
+}
+
+func (self *FixTodosFileInstruction) SerializedInstructions() string {
+	return serializeInstruction(self)
+}
+
+func (self *FixTodosFileInstruction) run(common *common.Common) error {
+	return handleInteractiveRebase(common, func(path string) error {
+		return nil
+	})
+}
+
+func NewFixTodosFileInstruction() Instruction {
+	return &FixTodosFileInstruction{}
 }
 
 type CherryPickCommitsInstruction struct {
