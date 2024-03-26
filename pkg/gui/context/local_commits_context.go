@@ -137,11 +137,13 @@ func (self *LocalCommitsContext) GetSelectedCommitHash() string {
 }
 
 func (self *LocalCommitsContext) SelectCommitByHash(hash string) bool {
-	if hash != "" {
-		if _, idx, found := lo.FindIndexOf(self.GetItems(), func(c *models.Commit) bool { return c.Sha == hash }); found {
-			self.SetSelection(idx)
-			return true
-		}
+	if hash == "" {
+		return false
+	}
+
+	if _, idx, found := lo.FindIndexOf(self.GetItems(), func(c *models.Commit) bool { return c.Sha == hash }); found {
+		self.SetSelection(idx)
+		return true
 	}
 
 	return false
