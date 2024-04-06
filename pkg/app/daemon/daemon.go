@@ -33,7 +33,7 @@ const (
 	DaemonKindUnknown DaemonKind = iota
 
 	DaemonKindExitImmediately
-	DaemonKindFixTodosFile
+	DaemonKindRemoveUpdateRefsForCopiedBranch
 	DaemonKindCherryPick
 	DaemonKindMoveTodosUp
 	DaemonKindMoveTodosDown
@@ -54,15 +54,15 @@ func getInstruction() Instruction {
 	jsonData := os.Getenv(DaemonInstructionEnvKey)
 
 	mapping := map[DaemonKind]func(string) Instruction{
-		DaemonKindExitImmediately:     deserializeInstruction[*ExitImmediatelyInstruction],
-		DaemonKindFixTodosFile:        deserializeInstruction[*FixTodosFileInstruction],
-		DaemonKindCherryPick:          deserializeInstruction[*CherryPickCommitsInstruction],
-		DaemonKindChangeTodoActions:   deserializeInstruction[*ChangeTodoActionsInstruction],
-		DaemonKindMoveFixupCommitDown: deserializeInstruction[*MoveFixupCommitDownInstruction],
-		DaemonKindMoveTodosUp:         deserializeInstruction[*MoveTodosUpInstruction],
-		DaemonKindMoveTodosDown:       deserializeInstruction[*MoveTodosDownInstruction],
-		DaemonKindInsertBreak:         deserializeInstruction[*InsertBreakInstruction],
-		DaemonKindWriteRebaseTodo:     deserializeInstruction[*WriteRebaseTodoInstruction],
+		DaemonKindExitImmediately:                 deserializeInstruction[*ExitImmediatelyInstruction],
+		DaemonKindRemoveUpdateRefsForCopiedBranch: deserializeInstruction[*RemoveUpdateRefsForCopiedBranchInstruction],
+		DaemonKindCherryPick:                      deserializeInstruction[*CherryPickCommitsInstruction],
+		DaemonKindChangeTodoActions:               deserializeInstruction[*ChangeTodoActionsInstruction],
+		DaemonKindMoveFixupCommitDown:             deserializeInstruction[*MoveFixupCommitDownInstruction],
+		DaemonKindMoveTodosUp:                     deserializeInstruction[*MoveTodosUpInstruction],
+		DaemonKindMoveTodosDown:                   deserializeInstruction[*MoveTodosDownInstruction],
+		DaemonKindInsertBreak:                     deserializeInstruction[*InsertBreakInstruction],
+		DaemonKindWriteRebaseTodo:                 deserializeInstruction[*WriteRebaseTodoInstruction],
 	}
 
 	return mapping[getDaemonKind()](jsonData)
@@ -159,24 +159,24 @@ func NewExitImmediatelyInstruction() Instruction {
 	return &ExitImmediatelyInstruction{}
 }
 
-type FixTodosFileInstruction struct{}
+type RemoveUpdateRefsForCopiedBranchInstruction struct{}
 
-func (self *FixTodosFileInstruction) Kind() DaemonKind {
-	return DaemonKindFixTodosFile
+func (self *RemoveUpdateRefsForCopiedBranchInstruction) Kind() DaemonKind {
+	return DaemonKindRemoveUpdateRefsForCopiedBranch
 }
 
-func (self *FixTodosFileInstruction) SerializedInstructions() string {
+func (self *RemoveUpdateRefsForCopiedBranchInstruction) SerializedInstructions() string {
 	return serializeInstruction(self)
 }
 
-func (self *FixTodosFileInstruction) run(common *common.Common) error {
+func (self *RemoveUpdateRefsForCopiedBranchInstruction) run(common *common.Common) error {
 	return handleInteractiveRebase(common, func(path string) error {
 		return nil
 	})
 }
 
-func NewFixTodosFileInstruction() Instruction {
-	return &FixTodosFileInstruction{}
+func NewRemoveUpdateRefsForCopiedBranchInstruction() Instruction {
+	return &RemoveUpdateRefsForCopiedBranchInstruction{}
 }
 
 type CherryPickCommitsInstruction struct {

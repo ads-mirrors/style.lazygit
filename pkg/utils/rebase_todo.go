@@ -263,7 +263,7 @@ func moveFixupCommitDown(todos []todo.Todo, originalSha string, fixupSha string)
 	return newTodos, nil
 }
 
-func FixTodosFile(fileName string, commentChar byte) error {
+func RemoveUpdateRefsForCopiedBranch(fileName string, commentChar byte) error {
 	todos, err := ReadRebaseTodoFile(fileName, commentChar)
 	if err != nil {
 		return err

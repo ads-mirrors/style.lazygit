@@ -233,7 +233,7 @@ func (self *RebaseCommands) PrepareInteractiveRebaseCommand(opts PrepareInteract
 	if opts.instruction != nil {
 		cmdObj.AddEnvVars(daemon.ToEnvVars(opts.instruction)...)
 	} else {
-		cmdObj.AddEnvVars(daemon.ToEnvVars(daemon.NewFixTodosFileInstruction())...)
+		cmdObj.AddEnvVars(daemon.ToEnvVars(daemon.NewRemoveUpdateRefsForCopiedBranchInstruction())...)
 	}
 
 	cmdObj.AddEnvVars(

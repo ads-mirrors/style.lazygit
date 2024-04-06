@@ -45,7 +45,7 @@ func handleInteractiveRebase(common *common.Common, f func(path string) error) e
 	path := os.Args[1]
 
 	if strings.HasSuffix(path, "git-rebase-todo") {
-		err := utils.FixTodosFile(path, getCommentChar())
+		err := utils.RemoveUpdateRefsForCopiedBranch(path, getCommentChar())
 		if err != nil {
 			return err
 		}
