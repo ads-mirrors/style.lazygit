@@ -109,6 +109,8 @@ type BranchShim struct {
 	Pullables      string // deprecated: use BehindForPull
 	AheadForPull   string
 	BehindForPull  string
+	AheadForPush   string
+	BehindForPush  string
 	UpstreamGone   bool
 	Head           bool
 	DetachedHead   bool
@@ -131,6 +133,8 @@ func branchShimFromModelBranch(branch *models.Branch) *BranchShim {
 		Pullables:      branch.BehindForPull,
 		AheadForPull:   branch.AheadForPull,
 		BehindForPull:  branch.BehindForPull,
+		AheadForPush:   branch.AheadForPush,
+		BehindForPush:  branch.BehindForPush,
 		UpstreamGone:   branch.UpstreamGone,
 		Head:           branch.Head,
 		DetachedHead:   branch.DetachedHead,
