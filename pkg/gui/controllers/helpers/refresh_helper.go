@@ -452,7 +452,24 @@ func (self *RefreshHelper) refreshBranches(refreshWorktrees bool, keepBranchSele
 		}
 	}
 
-	branches, err := self.c.Git().Loaders.BranchLoader.Load(reflogCommits)
+	branches, err := self.c.Git().Loaders.BranchLoader.Load(
+		reflogCommits,
+		self.c.Model().ExistingMainBranches,
+		self.c.Model().Branches,
+		func(f func() error) {
+			self.c.OnWorker(func(_ gocui.Task) error {
+				return f()
+			})
+		},
+		func() {
+			self.c.OnUIThread(func() error {
+				if err := self.c.Contexts().Branches.HandleRender(); err != nil {
+					self.c.Log.Error(err)
+				}
+				self.refreshStatus()
+				return nil
+			})
+		})
 	if err != nil {
 		self.c.Log.Error(err)
 	}
