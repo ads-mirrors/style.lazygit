@@ -20,7 +20,7 @@ func NewSessionStateLoader(c *helpers.HelperCommon, refsHelper *helpers.RefsHelp
 	}
 }
 
-type Commit struct {
+type CommitShim struct {
 	Hash          string
 	Sha           string
 	Name          string
@@ -35,12 +35,12 @@ type Commit struct {
 	Parents       []string
 }
 
-func commitWrapperFromModelCommit(commit *models.Commit) *Commit {
+func commitShimFromModelCommit(commit *models.Commit) *CommitShim {
 	if commit == nil {
 		return nil
 	}
 
-	return &Commit{
+	return &CommitShim{
 		Hash:          commit.Hash,
 		Sha:           commit.Hash,
 		Name:          commit.Name,
@@ -58,9 +58,9 @@ func commitWrapperFromModelCommit(commit *models.Commit) *Commit {
 
 // SessionState captures the current state of the application for use in custom commands
 type SessionState struct {
-	SelectedLocalCommit    *Commit
-	SelectedReflogCommit   *Commit
-	SelectedSubCommit      *Commit
+	SelectedLocalCommit    *CommitShim
+	SelectedReflogCommit   *CommitShim
+	SelectedSubCommit      *CommitShim
 	SelectedFile           *models.File
 	SelectedPath           string
 	SelectedLocalBranch    *models.Branch
@@ -78,8 +78,8 @@ func (self *SessionStateLoader) call() *SessionState {
 	return &SessionState{
 		SelectedFile:           self.c.Contexts().Files.GetSelectedFile(),
 		SelectedPath:           self.c.Contexts().Files.GetSelectedPath(),
-		SelectedLocalCommit:    commitWrapperFromModelCommit(self.c.Contexts().LocalCommits.GetSelected()),
-		SelectedReflogCommit:   commitWrapperFromModelCommit(self.c.Contexts().ReflogCommits.GetSelected()),
+		SelectedLocalCommit:    commitShimFromModelCommit(self.c.Contexts().LocalCommits.GetSelected()),
+		SelectedReflogCommit:   commitShimFromModelCommit(self.c.Contexts().ReflogCommits.GetSelected()),
 		SelectedLocalBranch:    self.c.Contexts().Branches.GetSelected(),
 		SelectedRemoteBranch:   self.c.Contexts().RemoteBranches.GetSelected(),
 		SelectedRemote:         self.c.Contexts().Remotes.GetSelected(),
@@ -87,7 +87,7 @@ func (self *SessionStateLoader) call() *SessionState {
 		SelectedStashEntry:     self.c.Contexts().Stash.GetSelected(),
 		SelectedCommitFile:     self.c.Contexts().CommitFiles.GetSelectedFile(),
 		SelectedCommitFilePath: self.c.Contexts().CommitFiles.GetSelectedPath(),
-		SelectedSubCommit:      commitWrapperFromModelCommit(self.c.Contexts().SubCommits.GetSelected()),
+		SelectedSubCommit:      commitShimFromModelCommit(self.c.Contexts().SubCommits.GetSelected()),
 		SelectedWorktree:       self.c.Contexts().Worktrees.GetSelected(),
 		CheckedOutBranch:       self.refsHelper.GetCheckedOutRef(),
 	}
