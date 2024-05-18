@@ -103,9 +103,9 @@ func (self *CommitLoader) GetCommits(opts GetCommitsOptions) ([]*models.Commit, 
 	go utils.Safe(func() {
 		defer wg.Done()
 
-		ancestor = self.getMergeBase(opts.RefName, opts.ExistingMainBranches)
+		ancestor = opts.ExistingMainBranches.GetMergeBase(opts.RefName)
 		if opts.RefToShowDivergenceFrom != "" {
-			remoteAncestor = self.getMergeBase(opts.RefToShowDivergenceFrom, opts.ExistingMainBranches)
+			remoteAncestor = opts.ExistingMainBranches.GetMergeBase(opts.RefToShowDivergenceFrom)
 		}
 	})
 
@@ -464,28 +464,6 @@ func setCommitMergedStatuses(ancestor string, commits []*models.Commit) {
 			commits[i].Status = models.StatusMerged
 		}
 	}
-}
-
-func (self *CommitLoader) getMergeBase(refName string, existingMainBranches *ExistingMainBranches) string {
-	mainBranches := existingMainBranches.Get()
-	if len(mainBranches) == 0 {
-		return ""
-	}
-
-	// We pass all configured main branches to the merge-base call; git will
-	// return the base commit for the closest one.
-
-	output, err := self.cmd.New(
-		NewGitCmd("merge-base").Arg(refName).Arg(mainBranches...).
-			ToArgv(),
-	).DontLog().RunWithOutput()
-	if err != nil {
-		// If there's an error, it must be because one of the main branches that
-		// used to exist when we called getExistingMainBranches() was deleted
-		// meanwhile. To fix this for next time, throw away our cache.
-		existingMainBranches.Clear()
-	}
-	return ignoringWarnings(output)
 }
 
 func ignoringWarnings(commandOutput string) string {

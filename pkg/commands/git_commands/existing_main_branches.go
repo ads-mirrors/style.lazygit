@@ -48,6 +48,29 @@ func (self *ExistingMainBranches) Clear() {
 	self.existingBranches = nil
 }
 
+// Return the merge base of the given refName with the closest main branch.
+func (self *ExistingMainBranches) GetMergeBase(refName string) string {
+	mainBranches := self.Get()
+	if len(mainBranches) == 0 {
+		return ""
+	}
+
+	// We pass all existing main branches to the merge-base call; git will
+	// return the base commit for the closest one.
+
+	output, err := self.cmd.New(
+		NewGitCmd("merge-base").Arg(refName).Arg(mainBranches...).
+			ToArgv(),
+	).DontLog().RunWithOutput()
+	if err != nil {
+		// If there's an error, it must be because one of the main branches that
+		// used to exist when we called getExistingMainBranches() was deleted
+		// meanwhile. To fix this for next time, throw away our cache.
+		self.Clear()
+	}
+	return ignoringWarnings(output)
+}
+
 func (self *ExistingMainBranches) determineMainBranches() []string {
 	var existingBranches []string
 	var wg sync.WaitGroup
