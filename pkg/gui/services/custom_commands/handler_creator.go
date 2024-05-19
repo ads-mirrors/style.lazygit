@@ -292,7 +292,17 @@ func (self *HandlerCreator) finalHandler(customCommand config.CustomCommand, ses
 			if strings.TrimSpace(output) == "" {
 				output = self.c.Tr.EmptyOutput
 			}
-			return self.c.Alert(cmdStr, output)
+
+			var title string
+			if customCommand.OutputTitle != "" {
+				title, err = resolveTemplate(customCommand.OutputTitle)
+				if err != nil {
+					return err
+				}
+			} else {
+				title = cmdStr
+			}
+			return self.c.Alert(title, output)
 		}
 
 		return nil
