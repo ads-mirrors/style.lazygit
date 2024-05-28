@@ -41,13 +41,6 @@ func (self *ExistingMainBranches) Get() []string {
 	return self.existingBranches
 }
 
-func (self *ExistingMainBranches) Clear() {
-	self.mutex.Lock()
-	defer self.mutex.Unlock()
-
-	self.existingBranches = nil
-}
-
 // Return the merge base of the given refName with the closest main branch.
 func (self *ExistingMainBranches) GetMergeBase(refName string) string {
 	mainBranches := self.Get()
@@ -58,16 +51,17 @@ func (self *ExistingMainBranches) GetMergeBase(refName string) string {
 	// We pass all existing main branches to the merge-base call; git will
 	// return the base commit for the closest one.
 
-	output, err := self.cmd.New(
+	// We ignore errors from this call, since we can't distinguish whether the
+	// error is because one of the main branches has been deleted since the last
+	// call to determineMainBranches, or because the refName has no common
+	// history with any of the main branches. Since the former should happen
+	// very rarely, users must quit and restart lazygit to fix it; the latter is
+	// also not very common, but can totally happen and is not an error.
+
+	output, _ := self.cmd.New(
 		NewGitCmd("merge-base").Arg(refName).Arg(mainBranches...).
 			ToArgv(),
 	).DontLog().RunWithOutput()
-	if err != nil {
-		// If there's an error, it must be because one of the main branches that
-		// used to exist when we called getExistingMainBranches() was deleted
-		// meanwhile. To fix this for next time, throw away our cache.
-		self.Clear()
-	}
 	return ignoringWarnings(output)
 }
 
