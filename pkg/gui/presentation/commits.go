@@ -440,9 +440,19 @@ func displayCommit(
 		mark = fmt.Sprintf("%s ", willBeRebased)
 	}
 
-	authorFunc := authors.ShortAuthor
+	authorLength := common.UserConfig.Gui.CommitAuthorShortLength
 	if fullDescription {
-		authorFunc = authors.LongAuthor
+		authorLength = common.UserConfig.Gui.CommitAuthorLongLength
+	}
+	var authorFunc func(string) string
+	if authorLength < 2 {
+		authorFunc = func(s string) string { return "" }
+	} else if authorLength == 2 {
+		authorFunc = authors.ShortAuthor
+	} else {
+		authorFunc = func(name string) string {
+			return authors.LongAuthor(name, authorLength)
+		}
 	}
 
 	cols := make([]string, 0, 7)

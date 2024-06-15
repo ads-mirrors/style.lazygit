@@ -11,11 +11,16 @@ import (
 	"github.com/mattn/go-runewidth"
 )
 
+type authorNameCacheKey struct {
+	authorName string
+	truncateTo int
+}
+
 // if these being global variables causes trouble we can wrap them in a struct
 // attached to the gui state.
 var (
 	authorInitialCache = make(map[string]string)
-	authorNameCache    = make(map[string]string)
+	authorNameCache    = make(map[authorNameCacheKey]string)
 	authorStyleCache   = make(map[string]style.TextStyle)
 )
 
@@ -37,15 +42,16 @@ func ShortAuthor(authorName string) string {
 	return value
 }
 
-func LongAuthor(authorName string) string {
-	if value, ok := authorNameCache[authorName]; ok {
+func LongAuthor(authorName string, length int) string {
+	cacheKey := authorNameCacheKey{authorName: authorName, truncateTo: length}
+	if value, ok := authorNameCache[cacheKey]; ok {
 		return value
 	}
 
-	paddedAuthorName := utils.WithPadding(authorName, 17, utils.AlignLeft)
-	truncatedName := utils.TruncateWithEllipsis(paddedAuthorName, 17)
+	paddedAuthorName := utils.WithPadding(authorName, length, utils.AlignLeft)
+	truncatedName := utils.TruncateWithEllipsis(paddedAuthorName, length)
 	value := AuthorStyle(authorName).Sprint(truncatedName)
-	authorNameCache[authorName] = value
+	authorNameCache[cacheKey] = value
 
 	return value
 }
