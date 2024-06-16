@@ -500,10 +500,6 @@ func (self *FilesController) EnterFile(opts types.OnFocusOpts) error {
 		return errors.New(self.c.Tr.FileStagingRequirements)
 	}
 
-	if !file.HasUnstagedChanges {
-		return self.c.PushContext(self.c.Contexts().StagingSecondary, opts)
-	}
-
 	return self.c.PushContext(self.c.Contexts().Staging, opts)
 }
 
