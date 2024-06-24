@@ -444,16 +444,7 @@ func displayCommit(
 	if fullDescription {
 		authorLength = common.UserConfig.Gui.CommitAuthorLongLength
 	}
-	var authorFunc func(string) string
-	if authorLength < 2 {
-		authorFunc = func(s string) string { return "" }
-	} else if authorLength == 2 {
-		authorFunc = authors.ShortAuthor
-	} else {
-		authorFunc = func(name string) string {
-			return authors.LongAuthor(name, authorLength)
-		}
-	}
+	author := authors.AuthorWithLength(commit.AuthorName, authorLength)
 
 	cols := make([]string, 0, 7)
 	cols = append(
@@ -463,7 +454,7 @@ func displayCommit(
 		bisectString,
 		descriptionString,
 		actionString,
-		authorFunc(commit.AuthorName),
+		author,
 		graphLine+mark+tagString+theme.DefaultTextColor.Sprint(name),
 	)
 

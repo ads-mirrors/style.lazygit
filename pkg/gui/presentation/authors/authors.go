@@ -56,6 +56,23 @@ func LongAuthor(authorName string, length int) string {
 	return value
 }
 
+// AuthorWithLength returns a representation of the author that fits into a
+// given maximum length:
+// - if the length is less than 2, it returns an empty string
+// - if the length is 2, it returns the initials
+// - otherwise, it returns the author name truncated to the maximum length
+func AuthorWithLength(authorName string, length int) string {
+	if length < 2 {
+		return ""
+	}
+
+	if length == 2 {
+		return ShortAuthor(authorName)
+	}
+
+	return LongAuthor(authorName, length)
+}
+
 func AuthorStyle(authorName string) style.TextStyle {
 	if value, ok := authorStyleCache[authorName]; ok {
 		return value
