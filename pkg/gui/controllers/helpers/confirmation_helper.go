@@ -126,6 +126,8 @@ func (self *ConfirmationHelper) getPopupPanelDimensionsAux(panelWidth int, panel
 		panelHeight = height * 3 / 4
 	}
 	if parentPopupContext != nil {
+		// If there's already a popup on the screen, offset the new one from its
+		// parent so that it's clearly distinguished from the parent
 		x0, y0, _, _ := parentPopupContext.GetView().Dimensions()
 		x0 += 3
 		y0 += 1
