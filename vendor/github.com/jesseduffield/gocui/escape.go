@@ -268,58 +268,48 @@ func (ei *escapeInterpreter) outputCSI() error {
 
 func (ei *escapeInterpreter) csiColor(param []string) (color Attribute, skip int, err error) {
 	if len(param) < 2 {
-		err = errCSIParseError
-		return
+		return 0, 0, errCSIParseError
 	}
 
 	switch param[1] {
 	case "2":
 		// 24-bit color
 		if ei.mode < OutputTrue {
-			err = errCSIParseError
-			return
+			return 0, 0, errCSIParseError
 		}
 		if len(param) < 5 {
-			err = errCSIParseError
-			return
+			return 0, 0, errCSIParseError
 		}
 		var red, green, blue int
 		red, err = strconv.Atoi(param[2])
 		if err != nil {
-			err = errCSIParseError
-			return
+			return 0, 0, errCSIParseError
 		}
 		green, err = strconv.Atoi(param[3])
 		if err != nil {
-			err = errCSIParseError
-			return
+			return 0, 0, errCSIParseError
 		}
 		blue, err = strconv.Atoi(param[4])
 		if err != nil {
-			err = errCSIParseError
-			return
+			return 0, 0, errCSIParseError
 		}
 		return NewRGBColor(int32(red), int32(green), int32(blue)), 5, nil
 	case "5":
 		// 8-bit color
 		if ei.mode < Output256 {
-			err = errCSIParseError
-			return
+			return 0, 0, errCSIParseError
 		}
 		if len(param) < 3 {
-			err = errCSIParseError
-			return
+			return 0, 0, errCSIParseError
 		}
 		var hex int
 		hex, err = strconv.Atoi(param[2])
 		if err != nil {
-			err = errCSIParseError
-			return
+			return 0, 0, errCSIParseError
 		}
 		return Get256Color(int32(hex)), 3, nil
 	default:
-		err = errCSIParseError
-		return
+		return 0, 0, errCSIParseError
 	}
 }
 
