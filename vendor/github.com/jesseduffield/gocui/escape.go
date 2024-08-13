@@ -17,6 +17,7 @@ type escapeInterpreter struct {
 	curFgColor, curBgColor Attribute
 	mode                   OutputMode
 	instruction            instruction
+	hyperlink              string
 }
 
 type (
@@ -40,7 +41,11 @@ const (
 	stateCSI
 	stateParams
 	stateOSC
-	stateOSCEscape
+	stateOSCWaitForParams
+	stateOSCParams
+	stateOSCHyperlink
+	stateOSCEndEscape
+	stateOSCSkipUnknown
 
 	bold      fontEffect = 1
 	faint     fontEffect = 2
@@ -60,6 +65,7 @@ var (
 	errNotCSI        = errors.New("Not a CSI escape sequence")
 	errCSIParseError = errors.New("CSI escape sequence parsing error")
 	errCSITooLong    = errors.New("CSI escape sequence is too long")
+	errOSCParseError = errors.New("OSC escape sequence parsing error")
 )
 
 // runes in case of error will output the non-parsed runes as a string.
@@ -192,14 +198,46 @@ func (ei *escapeInterpreter) parseOne(ch rune) (isEscape bool, err error) {
 			return false, errCSIParseError
 		}
 	case stateOSC:
-		switch ch {
-		case 0x1b:
-			ei.state = stateOSCEscape
+		if ch == '8' {
+			ei.state = stateOSCWaitForParams
+			ei.hyperlink = ""
 			return true, nil
 		}
+
+		ei.state = stateOSCSkipUnknown
 		return true, nil
-	case stateOSCEscape:
+	case stateOSCWaitForParams:
+		if ch != ';' {
+			return true, errOSCParseError
+		}
+
+		ei.state = stateOSCParams
+		return true, nil
+	case stateOSCParams:
+		if ch == ';' {
+			ei.state = stateOSCHyperlink
+		}
+		return true, nil
+	case stateOSCHyperlink:
+		switch ch {
+		case 0x07:
+			ei.state = stateNone
+		case 0x1b:
+			ei.state = stateOSCEndEscape
+		default:
+			ei.hyperlink += string(ch)
+		}
+		return true, nil
+	case stateOSCEndEscape:
 		ei.state = stateNone
+		return true, nil
+	case stateOSCSkipUnknown:
+		switch ch {
+		case 0x07:
+			ei.state = stateNone
+		case 0x1b:
+			ei.state = stateOSCEndEscape
+		}
 		return true, nil
 	}
 	return false, nil
