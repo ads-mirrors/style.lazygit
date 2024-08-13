@@ -78,6 +78,7 @@ func (ei *escapeInterpreter) runes() []rune {
 			ret = append(ret, ';')
 		}
 		return append(ret, ei.curch)
+	default:
 	}
 	return nil
 }

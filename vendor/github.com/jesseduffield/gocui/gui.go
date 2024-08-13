@@ -1381,6 +1381,8 @@ func (g *Gui) onKey(ev *GocuiEvent) error {
 		if _, err := g.execKeybindings(v, ev); err != nil {
 			return err
 		}
+
+	default:
 	}
 
 	return nil
