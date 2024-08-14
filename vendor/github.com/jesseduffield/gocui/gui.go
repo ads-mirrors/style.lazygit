@@ -130,6 +130,7 @@ type Gui struct {
 	managers          []Manager
 	keybindings       []*keybinding
 	focusHandler      func(bool) error
+	openHyperlink     func(string) error
 	maxX, maxY        int
 	outputMode        OutputMode
 	stop              chan struct{}
@@ -622,6 +623,10 @@ func (g *Gui) WhitelistKeybinding(k Key) error {
 
 func (g *Gui) SetFocusHandler(handler func(bool) error) {
 	g.focusHandler = handler
+}
+
+func (g *Gui) SetOpenHyperlinkFunc(openHyperlinkFunc func(string) error) {
+	g.openHyperlink = openHyperlinkFunc
 }
 
 // getKey takes an empty interface with a key and returns the corresponding
@@ -1364,6 +1369,14 @@ func (g *Gui) onKey(ev *GocuiEvent) error {
 				// update the view's cursor to match the text area's cursor.
 				cX, _ := v.TextArea.GetCursorXY()
 				v.SetCursorX(cX)
+			}
+		}
+
+		if ev.Key == MouseLeft && !v.Editable && g.openHyperlink != nil {
+			if newY >= 0 && newY <= len(v.viewLines)-1 && newX >= 0 && newX <= len(v.viewLines[newY].line)-1 {
+				if link := v.viewLines[newY].line[newX].hyperlink; link != "" {
+					return g.openHyperlink(link)
+				}
 			}
 		}
 
