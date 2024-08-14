@@ -1356,6 +1356,15 @@ func (g *Gui) onKey(ev *GocuiEvent) error {
 			if err := v.SetCursor(newCx, newCy); err != nil {
 				return err
 			}
+			if v.Editable {
+				v.TextArea.SetCursor2D(newX, newY)
+
+				// SetCursor2D might have adjusted the text area's cursor to the
+				// left to move left from a soft line break, so we need to
+				// update the view's cursor to match the text area's cursor.
+				cX, _ := v.TextArea.GetCursorXY()
+				v.SetCursorX(cX)
+			}
 		}
 
 		if IsMouseKey(ev.Key) {
