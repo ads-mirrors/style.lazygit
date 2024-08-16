@@ -1190,6 +1190,9 @@ func (v *View) draw() error {
 			if bgColor == ColorDefault {
 				bgColor = v.BgColor
 			}
+			if c.hyperlink != "" {
+				fgColor |= AttrUnderline
+			}
 
 			if err := v.setRune(x, y, c.chr, fgColor, bgColor); err != nil {
 				return err
