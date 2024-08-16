@@ -359,6 +359,14 @@ func (gui *Gui) onNewRepo(startArgs appTypes.StartArgs, contextKey types.Context
 		return nil
 	})
 
+	gui.g.SetOpenHyperlinkFunc(func(url string) error {
+		if err := gui.os.OpenLink(url); err != nil {
+			return fmt.Errorf(gui.Tr.FailedToOpenURL, url, err)
+		}
+
+		return nil
+	})
+
 	// if a context key has been given, push that instead, and set its index to 0
 	if contextKey != context.NO_CONTEXT {
 		contextToPush = gui.c.ContextForKey(contextKey)
