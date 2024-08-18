@@ -282,13 +282,7 @@ func (self *TextArea) GoToEndOfLine() {
 
 	self.cursor = self.closestNewlineOnRight()
 
-	// If the end of line is a soft line break, we need to move left by one so
-	// that we end up at the last whitespace before the line break. Otherwise
-	// we'd be at the start of the next line, since the newline character
-	// doesn't really exist in the real content.
-	if self.cursor < len(self.content) && self.content[self.cursor] != '\n' {
-		self.cursor--
-	}
+	self.moveLeftFromSoftLineBreak()
 }
 
 func (self *TextArea) closestNewlineOnRight() int {
@@ -301,6 +295,16 @@ func (self *TextArea) closestNewlineOnRight() int {
 	}
 
 	return len(self.content)
+}
+
+func (self *TextArea) moveLeftFromSoftLineBreak() {
+	// If the end of line is a soft line break, we need to move left by one so
+	// that we end up at the last whitespace before the line break. Otherwise
+	// we'd be at the start of the next line, since the newline character
+	// doesn't really exist in the real content.
+	if self.cursor < len(self.content) && self.content[self.cursor] != '\n' {
+		self.cursor--
+	}
 }
 
 func (self *TextArea) atLineStart() bool {
