@@ -1093,34 +1093,8 @@ func (v *View) draw() error {
 		}
 		v.ox = 0
 	}
-	if v.tainted {
-		lineIdx := 0
-		lines := v.lines
-		if v.HasLoader {
-			lines = v.loaderLines()
-		}
-		for i, line := range lines {
-			wrap := 0
-			if v.Wrap {
-				wrap = maxX
-			}
 
-			ls := lineWrap(line, wrap)
-			for j := range ls {
-				vline := viewLine{linesX: j, linesY: i, line: ls[j]}
-
-				if lineIdx > len(v.viewLines)-1 {
-					v.viewLines = append(v.viewLines, vline)
-				} else {
-					v.viewLines[lineIdx] = vline
-				}
-				lineIdx++
-			}
-		}
-		if !v.HasLoader {
-			v.tainted = false
-		}
-	}
+	v.refreshViewLinesIfNeeded()
 
 	visibleViewLinesHeight := v.viewLineLengthIgnoringTrailingBlankLines()
 	if v.Autoscroll && visibleViewLinesHeight > maxY {
@@ -1200,6 +1174,38 @@ func (v *View) draw() error {
 		}
 	}
 	return nil
+}
+
+func (v *View) refreshViewLinesIfNeeded() {
+	if v.tainted {
+		maxX := v.Width()
+		lineIdx := 0
+		lines := v.lines
+		if v.HasLoader {
+			lines = v.loaderLines()
+		}
+		for i, line := range lines {
+			wrap := 0
+			if v.Wrap {
+				wrap = maxX
+			}
+
+			ls := lineWrap(line, wrap)
+			for j := range ls {
+				vline := viewLine{linesX: j, linesY: i, line: ls[j]}
+
+				if lineIdx > len(v.viewLines)-1 {
+					v.viewLines = append(v.viewLines, vline)
+				} else {
+					v.viewLines[lineIdx] = vline
+				}
+				lineIdx++
+			}
+		}
+		if !v.HasLoader {
+			v.tainted = false
+		}
+	}
 }
 
 // if autoscroll is enabled but we only have a single row of cells shown to the
