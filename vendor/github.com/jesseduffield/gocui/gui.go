@@ -1344,6 +1344,9 @@ func (g *Gui) onKey(ev *GocuiEvent) error {
 			}
 
 			lastCharForLine := len(v.lines[newY])
+			for lastCharForLine > 0 && v.lines[newY][lastCharForLine-1].chr == 0 {
+				lastCharForLine--
+			}
 			if lastCharForLine < newX {
 				newX = lastCharForLine
 				newCx = lastCharForLine - v.ox
