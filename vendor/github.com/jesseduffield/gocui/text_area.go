@@ -424,12 +424,16 @@ func (self *TextArea) SetCursor2D(x int, y int) {
 	for _, r := range self.wrappedContent {
 		if x <= 0 && y == 0 {
 			self.cursor = self.wrappedCursorToOrigCursor(newCursor)
+			if self.wrappedContent[newCursor] == '\n' {
+				self.moveLeftFromSoftLineBreak()
+			}
 			return
 		}
 
 		if r == '\n' {
 			if y == 0 {
 				self.cursor = self.wrappedCursorToOrigCursor(newCursor)
+				self.moveLeftFromSoftLineBreak()
 				return
 			}
 			y--
