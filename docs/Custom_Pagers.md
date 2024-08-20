@@ -26,7 +26,7 @@ git:
 
 ![](https://i.imgur.com/QJpQkF3.png)
 
-A cool feature of delta is --hyperlinks, which renders clickable links for the line numbers in the left margin, and lazygit supports these. To use them, set the `pager:` config to `delta --dark --paging=never --line-numbers --hyperlinks`. If you are a VS Code user, I recommend to add `--hyperlinks-file-link-format="vscode://file/{path}:{line}`; this allows you to click on an underlined line number in the diff to jump right to that same line in your editor.
+A cool feature of delta is --hyperlinks, which renders clickable links for the line numbers in the left margin, and lazygit supports these. To use them, set the `pager:` config to `delta --dark --paging=never --line-numbers --hyperlinks`. If you are a VS Code user, I recommend to add `--hyperlinks-file-link-format="vscode://file/{path}:{line}`; this allows you to click on an underlined line number in the diff to jump right to that same line in your editor. If you are using some other text editor, see [delta's documentation](https://dandavison.github.io/delta/hyperlinks.html) for tips how to get this to work.
 
 ## Diff-so-fancy
 
