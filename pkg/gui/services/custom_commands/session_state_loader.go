@@ -168,6 +168,7 @@ type SessionState struct {
 	SelectedReflogCommit   *Commit // deprecated, use SelectedCommit
 	SelectedSubCommit      *Commit // deprecated, use SelectedCommit
 	SelectedCommit         *Commit
+	SelectedCommits        []*Commit
 	SelectedFile           *File
 	SelectedPath           string
 	SelectedLocalBranch    *Branch
@@ -183,14 +184,23 @@ type SessionState struct {
 
 func (self *SessionStateLoader) call() *SessionState {
 	selectedLocalCommit := commitShimFromModelCommit(self.c.Contexts().LocalCommits.GetSelected())
+	localCommits, _, _ := self.c.Contexts().LocalCommits.GetSelectedItems()
+	selectedLocalCommits := lo.Map(localCommits, func(c *models.Commit, _ int) *Commit { return commitShimFromModelCommit(c) })
 	selectedReflogCommit := commitShimFromModelCommit(self.c.Contexts().ReflogCommits.GetSelected())
+	reflogCommits, _, _ := self.c.Contexts().ReflogCommits.GetSelectedItems()
+	selectedReflogCommits := lo.Map(reflogCommits, func(c *models.Commit, _ int) *Commit { return commitShimFromModelCommit(c) })
 	selectedSubCommit := commitShimFromModelCommit(self.c.Contexts().SubCommits.GetSelected())
+	subCommits, _, _ := self.c.Contexts().SubCommits.GetSelectedItems()
+	selectedSubCommits := lo.Map(subCommits, func(c *models.Commit, _ int) *Commit { return commitShimFromModelCommit(c) })
 
 	selectedCommit := selectedLocalCommit
+	selectedCommits := selectedLocalCommits
 	if self.c.Context().IsCurrentOrParent(self.c.Contexts().ReflogCommits) {
 		selectedCommit = selectedReflogCommit
+		selectedCommits = selectedReflogCommits
 	} else if self.c.Context().IsCurrentOrParent(self.c.Contexts().SubCommits) {
 		selectedCommit = selectedSubCommit
+		selectedCommits = selectedSubCommits
 	}
 
 	selectedPath := self.c.Contexts().Files.GetSelectedPath()
@@ -207,6 +217,7 @@ func (self *SessionStateLoader) call() *SessionState {
 		SelectedReflogCommit:   selectedReflogCommit,
 		SelectedSubCommit:      selectedSubCommit,
 		SelectedCommit:         selectedCommit,
+		SelectedCommits:        selectedCommits,
 		SelectedLocalBranch:    branchShimFromModelBranch(self.c.Contexts().Branches.GetSelected()),
 		SelectedRemoteBranch:   remoteBranchShimFromModelRemoteBranch(self.c.Contexts().RemoteBranches.GetSelected()),
 		SelectedRemote:         remoteShimFromModelRemote(self.c.Contexts().Remotes.GetSelected()),
