@@ -135,7 +135,7 @@ func (self *StashController) handleStashPop(stashEntry *models.StashEntry) error
 		if err != nil {
 			return err
 		}
-		return nil
+		return self.c.Context().Push(self.c.Contexts().Files)
 	}
 
 	if self.c.UserConfig().Gui.SkipStashWarning {
