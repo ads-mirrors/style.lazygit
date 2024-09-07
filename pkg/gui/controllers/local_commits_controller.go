@@ -895,7 +895,7 @@ func (self *LocalCommitsController) createFixupCommit(commit *models.Commit) err
 								return err
 							}
 
-							if err := self.moveFixupCommitToCurrentBranchOfStack(commit); err != nil {
+							if err := self.moveFixupCommitToOwnerStackedBranch(commit); err != nil {
 								return err
 							}
 
@@ -928,7 +928,7 @@ func (self *LocalCommitsController) createFixupCommit(commit *models.Commit) err
 	})
 }
 
-func (self *LocalCommitsController) moveFixupCommitToCurrentBranchOfStack(targetCommit *models.Commit) error {
+func (self *LocalCommitsController) moveFixupCommitToOwnerStackedBranch(targetCommit *models.Commit) error {
 	if self.c.Git().Version.IsOlderThan(2, 38, 0) {
 		// Git 2.38.0 introduced the `rebase.updateRefs` config option. Don't
 		// move the commit down with older versions, as it would break the stack.
@@ -955,21 +955,21 @@ func (self *LocalCommitsController) moveFixupCommitToCurrentBranchOfStack(target
 		return nil
 	}
 
-	headOfCurrentBranchIdx := -1
+	headOfOwnerBranchIdx := -1
 	for i := self.context().GetSelectedLineIdx(); i > 0; i-- {
 		if lo.SomeBy(self.c.Model().Branches, func(b *models.Branch) bool {
 			return b.CommitHash == self.c.Model().Commits[i].Hash
 		}) {
-			headOfCurrentBranchIdx = i
+			headOfOwnerBranchIdx = i
 			break
 		}
 	}
 
-	if headOfCurrentBranchIdx == -1 {
+	if headOfOwnerBranchIdx == -1 {
 		return nil
 	}
 
-	return self.c.Git().Rebase.MoveFixupCommitDown(self.c.Model().Commits, headOfCurrentBranchIdx)
+	return self.c.Git().Rebase.MoveFixupCommitDown(self.c.Model().Commits, headOfOwnerBranchIdx)
 }
 
 func (self *LocalCommitsController) createAmendCommit(commit *models.Commit, includeFileChanges bool) error {
@@ -995,7 +995,7 @@ func (self *LocalCommitsController) createAmendCommit(commit *models.Commit, inc
 						return err
 					}
 
-					if err := self.moveFixupCommitToCurrentBranchOfStack(commit); err != nil {
+					if err := self.moveFixupCommitToOwnerStackedBranch(commit); err != nil {
 						return err
 					}
 
