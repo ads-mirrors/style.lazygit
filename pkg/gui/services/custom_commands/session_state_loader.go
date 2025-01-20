@@ -162,13 +162,31 @@ func worktreeShimFromModelRemote(worktree *models.Worktree) *Worktree {
 	}
 }
 
+type Commits []*Commit
+
+func (c Commits) First() *Commit {
+	if len(c) == 0 {
+		return nil
+	}
+
+	return c[0]
+}
+
+func (c Commits) Last() *Commit {
+	if len(c) == 0 {
+		return nil
+	}
+
+	return c[len(c)-1]
+}
+
 // SessionState captures the current state of the application for use in custom commands
 type SessionState struct {
 	SelectedLocalCommit    *Commit // deprecated, use SelectedCommit
 	SelectedReflogCommit   *Commit // deprecated, use SelectedCommit
 	SelectedSubCommit      *Commit // deprecated, use SelectedCommit
 	SelectedCommit         *Commit
-	SelectedCommits        []*Commit
+	SelectedCommits        Commits
 	SelectedFile           *File
 	SelectedPath           string
 	SelectedLocalBranch    *Branch
