@@ -157,6 +157,8 @@ type Gui struct {
 	// If Mouse is true then mouse events will be enabled.
 	Mouse bool
 
+	IsPasting bool
+
 	// If InputEsc is true, when ESC sequence is in the buffer and it doesn't
 	// match any known sequence, ESC means KeyEsc.
 	InputEsc bool
@@ -759,6 +761,7 @@ func (g *Gui) MainLoop() error {
 	}()
 
 	Screen.EnableFocus()
+	Screen.EnablePaste()
 
 	previousEnableMouse := false
 	for {
@@ -847,6 +850,9 @@ func (g *Gui) handleEvent(ev *GocuiEvent) error {
 		return nil
 	case eventFocus:
 		return g.onFocus(ev)
+	case eventPaste:
+		g.IsPasting = ev.Start
+		return nil
 	default:
 		return nil
 	}
