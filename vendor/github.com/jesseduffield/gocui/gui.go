@@ -1311,6 +1311,10 @@ func (g *Gui) onKey(ev *GocuiEvent) error {
 	switch ev.Type {
 	case eventKey:
 
+		if g.IsPasting && ev.Key == KeyCtrlJ {
+			ev.Key = KeyCtrlM
+		}
+
 		err := g.execKeybindings(g.currentView, ev)
 		if err != nil {
 			return err
