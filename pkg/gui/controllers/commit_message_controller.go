@@ -48,7 +48,7 @@ func (self *CommitMessageController) GetKeybindings(opts types.KeybindingsOpts) 
 		},
 		{
 			Key:     opts.GetKey(opts.Config.Universal.TogglePanel),
-			Handler: self.switchToCommitDescription,
+			Handler: self.handleTogglePanel,
 		},
 		{
 			Key:     opts.GetKey(opts.Config.CommitMessage.CommitMenu),
@@ -105,6 +105,22 @@ func (self *CommitMessageController) switchToCommitDescription() error {
 	return nil
 }
 
+func (self *CommitMessageController) handleTogglePanel() error {
+	if self.c.GocuiGui().IsPasting {
+		// It is unlikely that a pasted commit message contains a tab in the
+		// subject line, so it shouldn't matter too much how we handle it.
+		// Simply insert 4 spaces instead; all that matters is that we don't
+		// switch to the description panel.
+		view := self.context().GetView()
+		for range 4 {
+			view.Editor.Edit(view, gocui.KeySpace, ' ', 0)
+		}
+		return nil
+	}
+
+	return self.switchToCommitDescription()
+}
+
 func (self *CommitMessageController) handleCommitIndexChange(value int) error {
 	currentIndex := self.context().GetSelectedIndex()
 	newIndex := currentIndex + value
@@ -140,6 +156,10 @@ func (self *CommitMessageController) setCommitMessageAtIndex(index int) (bool, e
 }
 
 func (self *CommitMessageController) confirm() error {
+	if self.c.GocuiGui().IsPasting {
+		return self.switchToCommitDescription()
+	}
+
 	return self.c.Helpers().Commits.HandleCommitConfirm()
 }
 

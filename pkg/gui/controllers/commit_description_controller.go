@@ -28,7 +28,7 @@ func (self *CommitDescriptionController) GetKeybindings(opts types.KeybindingsOp
 	bindings := []*types.Binding{
 		{
 			Key:     opts.GetKey(opts.Config.Universal.TogglePanel),
-			Handler: self.switchToCommitMessage,
+			Handler: self.handleTogglePanel,
 		},
 		{
 			Key:     opts.GetKey(opts.Config.Universal.Return),
@@ -73,6 +73,22 @@ func (self *CommitDescriptionController) GetOnFocus() func(types.OnFocusOpts) {
 func (self *CommitDescriptionController) switchToCommitMessage() error {
 	self.c.Context().Replace(self.c.Contexts().CommitMessage)
 	return nil
+}
+
+func (self *CommitDescriptionController) handleTogglePanel() error {
+	if self.c.GocuiGui().IsPasting {
+		// Handling tabs in pasted commit messages is not optimal, but hopefully
+		// good enough for now. We simply insert 4 spaces without worrying about
+		// column alignment. This works well enough for leading indentation,
+		// which is common in pasted code snippets.
+		view := self.Context().GetView()
+		for range 4 {
+			view.Editor.Edit(view, gocui.KeySpace, ' ', 0)
+		}
+		return nil
+	}
+
+	return self.switchToCommitMessage()
 }
 
 func (self *CommitDescriptionController) close() error {
