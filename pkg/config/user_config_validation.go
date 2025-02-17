@@ -86,7 +86,7 @@ func validateKeybindings(keybindingConfig KeybindingConfig) error {
 func validateCustomCommandKey(key string) error {
 	if !isValidKeybindingKey(key) {
 		return fmt.Errorf("Unrecognized key '%s' for custom command. For permitted values see %s",
-			strings.ToLower(key), constants.Links.Docs.CustomKeybindings)
+			key, constants.Links.Docs.CustomKeybindings)
 	}
 	return nil
 }
