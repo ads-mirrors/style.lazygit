@@ -62,7 +62,7 @@ func validateKeybindingsRecurse(path string, node any) error {
 		key := node.(string)
 		if !isValidKeybindingKey(key) {
 			return fmt.Errorf("Unrecognized key '%s' for keybinding '%s'. For permitted values see %s",
-				strings.ToLower(key), path, constants.Links.Docs.CustomKeybindings)
+				key, path, constants.Links.Docs.CustomKeybindings)
 		}
 	} else {
 		log.Fatalf("Unexpected type for property '%s': %s", path, value.Kind())
