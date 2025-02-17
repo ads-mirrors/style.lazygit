@@ -2,6 +2,7 @@ package config
 
 import (
 	"fmt"
+	"log"
 	"reflect"
 	"slices"
 	"strings"
@@ -64,7 +65,7 @@ func validateKeybindingsRecurse(path string, node any) error {
 				strings.ToLower(key), path, constants.Links.Docs.CustomKeybindings)
 		}
 	} else {
-		panic("Unexpected type")
+		log.Fatalf("Unexpected type for property '%s': %s", path, value.Kind())
 	}
 	return nil
 }
