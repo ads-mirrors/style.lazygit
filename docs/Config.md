@@ -438,9 +438,9 @@ os:
   # See https://github.com/jesseduffield/lazygit/blob/master/docs/Config.md#custom-command-for-copying-to-and-pasting-from-clipboard
   readFromClipboardCmd: ""
 
-  # A shell startup file containing shell aliases or shell functions. This will be sourced before running any shell commands, so that shell aliases are available in the `:` command prompt or even in custom commands.
+  # A shell startup file containing shell aliases or shell functions. This will be sourced before running any shell commands, so that shell functions are available in the `:` command prompt or even in custom commands.
   # See https://github.com/jesseduffield/lazygit/blob/master/docs/Config.md#using-aliases-or-functions-in-shell-commands
-  shellAliasesFile: ""
+  shellFunctionsFile: ""
 
   # EditCommand is the command for editing a file.
   # Deprecated: use Edit instead. Note that semantics are different:
@@ -750,6 +750,8 @@ os:
 ```
 
 For many people it might work well enough to use their entire shell config file (`~/.bashrc` or `~/.zshrc`) as the `shellAliasesFile`, but these config files typically do a lot more than defining aliases (e.g. initialize the completion system, start an ssh-agent, etc.) and this may unnecessarily delay execution of shell commands.
+
+When using zsh, aliases can't be used here, but functions can. It is easy to convert your existing aliases into functions, just change `alias l="ls -la"` to `l() ls -la`, for example. This way it will work as before both in the shell and in lazygit.
 
 Note that the shell aliases file is not only used when executing shell commands, but also for [custom commands](Custom_Command_Keybindings.md), and when opening a file in the editor.
 

@@ -44,7 +44,7 @@ func (self *CmdObjBuilder) NewWithEnviron(args []string, env []string) ICmdObj {
 
 func (self *CmdObjBuilder) NewShell(commandStr string, aliasesFile string) ICmdObj {
 	if len(aliasesFile) > 0 {
-		commandStr = fmt.Sprintf("%ssource %s\n%s", self.platform.PrefixForShellAliasesFile, aliasesFile, commandStr)
+		commandStr = fmt.Sprintf("%ssource %s\n%s", self.platform.PrefixForShellFunctionsFile, aliasesFile, commandStr)
 	}
 	quotedCommand := self.quotedCommandString(commandStr)
 	cmdArgs := str.ToArgv(fmt.Sprintf("%s %s %s", self.platform.Shell, self.platform.ShellArg, quotedCommand))

@@ -12,18 +12,18 @@ import (
 func GetPlatform() *Platform {
 	shell := getUserShell()
 
-	prefixForShellAliasesFile := ""
+	prefixForShellFunctionsFile := ""
 	if strings.HasSuffix(shell, "bash") {
-		prefixForShellAliasesFile = "shopt -s expand_aliases\n"
+		prefixForShellFunctionsFile = "shopt -s expand_aliases\n"
 	}
 
 	return &Platform{
-		OS:                        runtime.GOOS,
-		Shell:                     shell,
-		ShellArg:                  "-c",
-		PrefixForShellAliasesFile: prefixForShellAliasesFile,
-		OpenCommand:               "open {{filename}}",
-		OpenLinkCommand:           "open {{link}}",
+		OS:                          runtime.GOOS,
+		Shell:                       shell,
+		ShellArg:                    "-c",
+		PrefixForShellFunctionsFile: prefixForShellFunctionsFile,
+		OpenCommand:                 "open {{filename}}",
+		OpenLinkCommand:             "open {{link}}",
 	}
 }
 
