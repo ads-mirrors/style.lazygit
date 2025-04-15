@@ -45,6 +45,7 @@ func NewLocalCommitsContext(c *ContextCommon) *LocalCommitsContext {
 
 		return presentation.GetCommitListDisplayStrings(
 			c.Common,
+			&c.Model().HashPool,
 			c.Model().Commits,
 			c.Model().Branches,
 			c.Model().CheckedOutBranch,

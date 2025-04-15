@@ -548,6 +548,7 @@ func TestGetCommitListDisplayStrings(t *testing.T) {
 			t.Run(s.testName, func(t *testing.T) {
 				result := GetCommitListDisplayStrings(
 					common,
+					&hashPool,
 					s.commits,
 					s.branches,
 					s.currentBranchName,

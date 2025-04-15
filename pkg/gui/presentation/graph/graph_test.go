@@ -222,7 +222,7 @@ func TestRenderCommitGraph(t *testing.T) {
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
 			getStyle := func(c *models.Commit) style.TextStyle { return style.FgDefault }
-			lines := RenderCommitGraph(test.commits, "blah", getStyle)
+			lines := RenderCommitGraph(&hashPool, test.commits, "blah", getStyle)
 
 			trimmedExpectedOutput := ""
 			for _, line := range strings.Split(strings.TrimPrefix(test.expectedOutput, "\n"), "\n") {
@@ -268,8 +268,8 @@ func TestRenderPipeSet(t *testing.T) {
 		{
 			name: "single cell",
 			pipes: []*Pipe{
-				{fromPos: 0, toPos: 0, fromHash: "a", toHash: "b", kind: TERMINATES, style: cyan},
-				{fromPos: 0, toPos: 0, fromHash: "b", toHash: "c", kind: STARTS, style: green},
+				{fromPos: 0, toPos: 0, fromHash: pool("a"), toHash: pool("b"), kind: TERMINATES, style: cyan},
+				{fromPos: 0, toPos: 0, fromHash: pool("b"), toHash: pool("c"), kind: STARTS, style: green},
 			},
 			prevCommit:     &models.Commit{Hash: pool("a")},
 			expectedStr:    "◯",
@@ -278,8 +278,8 @@ func TestRenderPipeSet(t *testing.T) {
 		{
 			name: "single cell, selected",
 			pipes: []*Pipe{
-				{fromPos: 0, toPos: 0, fromHash: "a", toHash: "selected", kind: TERMINATES, style: cyan},
-				{fromPos: 0, toPos: 0, fromHash: "selected", toHash: "c", kind: STARTS, style: green},
+				{fromPos: 0, toPos: 0, fromHash: pool("a"), toHash: pool("selected"), kind: TERMINATES, style: cyan},
+				{fromPos: 0, toPos: 0, fromHash: pool("selected"), toHash: pool("c"), kind: STARTS, style: green},
 			},
 			prevCommit:     &models.Commit{Hash: pool("a")},
 			expectedStr:    "◯",
@@ -288,10 +288,10 @@ func TestRenderPipeSet(t *testing.T) {
 		{
 			name: "terminating hook and starting hook, selected",
 			pipes: []*Pipe{
-				{fromPos: 0, toPos: 0, fromHash: "a", toHash: "selected", kind: TERMINATES, style: cyan},
-				{fromPos: 1, toPos: 0, fromHash: "c", toHash: "selected", kind: TERMINATES, style: yellow},
-				{fromPos: 0, toPos: 0, fromHash: "selected", toHash: "d", kind: STARTS, style: green},
-				{fromPos: 0, toPos: 1, fromHash: "selected", toHash: "e", kind: STARTS, style: green},
+				{fromPos: 0, toPos: 0, fromHash: pool("a"), toHash: pool("selected"), kind: TERMINATES, style: cyan},
+				{fromPos: 1, toPos: 0, fromHash: pool("c"), toHash: pool("selected"), kind: TERMINATES, style: yellow},
+				{fromPos: 0, toPos: 0, fromHash: pool("selected"), toHash: pool("d"), kind: STARTS, style: green},
+				{fromPos: 0, toPos: 1, fromHash: pool("selected"), toHash: pool("e"), kind: STARTS, style: green},
 			},
 			prevCommit:  &models.Commit{Hash: pool("a")},
 			expectedStr: "⏣─╮",
@@ -302,10 +302,10 @@ func TestRenderPipeSet(t *testing.T) {
 		{
 			name: "terminating hook and starting hook, prioritise the terminating one",
 			pipes: []*Pipe{
-				{fromPos: 0, toPos: 0, fromHash: "a", toHash: "b", kind: TERMINATES, style: red},
-				{fromPos: 1, toPos: 0, fromHash: "c", toHash: "b", kind: TERMINATES, style: magenta},
-				{fromPos: 0, toPos: 0, fromHash: "b", toHash: "d", kind: STARTS, style: green},
-				{fromPos: 0, toPos: 1, fromHash: "b", toHash: "e", kind: STARTS, style: green},
+				{fromPos: 0, toPos: 0, fromHash: pool("a"), toHash: pool("b"), kind: TERMINATES, style: red},
+				{fromPos: 1, toPos: 0, fromHash: pool("c"), toHash: pool("b"), kind: TERMINATES, style: magenta},
+				{fromPos: 0, toPos: 0, fromHash: pool("b"), toHash: pool("d"), kind: STARTS, style: green},
+				{fromPos: 0, toPos: 1, fromHash: pool("b"), toHash: pool("e"), kind: STARTS, style: green},
 			},
 			prevCommit:  &models.Commit{Hash: pool("a")},
 			expectedStr: "⏣─│",
@@ -316,11 +316,11 @@ func TestRenderPipeSet(t *testing.T) {
 		{
 			name: "starting and terminating pipe sharing some space",
 			pipes: []*Pipe{
-				{fromPos: 0, toPos: 0, fromHash: "a1", toHash: "a2", kind: TERMINATES, style: red},
-				{fromPos: 0, toPos: 0, fromHash: "a2", toHash: "a3", kind: STARTS, style: yellow},
-				{fromPos: 1, toPos: 1, fromHash: "b1", toHash: "b2", kind: CONTINUES, style: magenta},
-				{fromPos: 3, toPos: 0, fromHash: "e1", toHash: "a2", kind: TERMINATES, style: green},
-				{fromPos: 0, toPos: 2, fromHash: "a2", toHash: "c3", kind: STARTS, style: yellow},
+				{fromPos: 0, toPos: 0, fromHash: pool("a1"), toHash: pool("a2"), kind: TERMINATES, style: red},
+				{fromPos: 0, toPos: 0, fromHash: pool("a2"), toHash: pool("a3"), kind: STARTS, style: yellow},
+				{fromPos: 1, toPos: 1, fromHash: pool("b1"), toHash: pool("b2"), kind: CONTINUES, style: magenta},
+				{fromPos: 3, toPos: 0, fromHash: pool("e1"), toHash: pool("a2"), kind: TERMINATES, style: green},
+				{fromPos: 0, toPos: 2, fromHash: pool("a2"), toHash: pool("c3"), kind: STARTS, style: yellow},
 			},
 			prevCommit:  &models.Commit{Hash: pool("a1")},
 			expectedStr: "⏣─│─┬─╯",
@@ -331,11 +331,11 @@ func TestRenderPipeSet(t *testing.T) {
 		{
 			name: "starting and terminating pipe sharing some space, with selection",
 			pipes: []*Pipe{
-				{fromPos: 0, toPos: 0, fromHash: "a1", toHash: "selected", kind: TERMINATES, style: red},
-				{fromPos: 0, toPos: 0, fromHash: "selected", toHash: "a3", kind: STARTS, style: yellow},
-				{fromPos: 1, toPos: 1, fromHash: "b1", toHash: "b2", kind: CONTINUES, style: magenta},
-				{fromPos: 3, toPos: 0, fromHash: "e1", toHash: "selected", kind: TERMINATES, style: green},
-				{fromPos: 0, toPos: 2, fromHash: "selected", toHash: "c3", kind: STARTS, style: yellow},
+				{fromPos: 0, toPos: 0, fromHash: pool("a1"), toHash: pool("selected"), kind: TERMINATES, style: red},
+				{fromPos: 0, toPos: 0, fromHash: pool("selected"), toHash: pool("a3"), kind: STARTS, style: yellow},
+				{fromPos: 1, toPos: 1, fromHash: pool("b1"), toHash: pool("b2"), kind: CONTINUES, style: magenta},
+				{fromPos: 3, toPos: 0, fromHash: pool("e1"), toHash: pool("selected"), kind: TERMINATES, style: green},
+				{fromPos: 0, toPos: 2, fromHash: pool("selected"), toHash: pool("c3"), kind: STARTS, style: yellow},
 			},
 			prevCommit:  &models.Commit{Hash: pool("a1")},
 			expectedStr: "⏣───╮ ╯",
@@ -346,10 +346,10 @@ func TestRenderPipeSet(t *testing.T) {
 		{
 			name: "many terminating pipes",
 			pipes: []*Pipe{
-				{fromPos: 0, toPos: 0, fromHash: "a1", toHash: "a2", kind: TERMINATES, style: red},
-				{fromPos: 0, toPos: 0, fromHash: "a2", toHash: "a3", kind: STARTS, style: yellow},
-				{fromPos: 1, toPos: 0, fromHash: "b1", toHash: "a2", kind: TERMINATES, style: magenta},
-				{fromPos: 2, toPos: 0, fromHash: "c1", toHash: "a2", kind: TERMINATES, style: green},
+				{fromPos: 0, toPos: 0, fromHash: pool("a1"), toHash: pool("a2"), kind: TERMINATES, style: red},
+				{fromPos: 0, toPos: 0, fromHash: pool("a2"), toHash: pool("a3"), kind: STARTS, style: yellow},
+				{fromPos: 1, toPos: 0, fromHash: pool("b1"), toHash: pool("a2"), kind: TERMINATES, style: magenta},
+				{fromPos: 2, toPos: 0, fromHash: pool("c1"), toHash: pool("a2"), kind: TERMINATES, style: green},
 			},
 			prevCommit:  &models.Commit{Hash: pool("a1")},
 			expectedStr: "◯─┴─╯",
@@ -360,11 +360,11 @@ func TestRenderPipeSet(t *testing.T) {
 		{
 			name: "starting pipe passing through",
 			pipes: []*Pipe{
-				{fromPos: 0, toPos: 0, fromHash: "a1", toHash: "a2", kind: TERMINATES, style: red},
-				{fromPos: 0, toPos: 0, fromHash: "a2", toHash: "a3", kind: STARTS, style: yellow},
-				{fromPos: 0, toPos: 3, fromHash: "a2", toHash: "d3", kind: STARTS, style: yellow},
-				{fromPos: 1, toPos: 1, fromHash: "b1", toHash: "b3", kind: CONTINUES, style: magenta},
-				{fromPos: 2, toPos: 2, fromHash: "c1", toHash: "c3", kind: CONTINUES, style: green},
+				{fromPos: 0, toPos: 0, fromHash: pool("a1"), toHash: pool("a2"), kind: TERMINATES, style: red},
+				{fromPos: 0, toPos: 0, fromHash: pool("a2"), toHash: pool("a3"), kind: STARTS, style: yellow},
+				{fromPos: 0, toPos: 3, fromHash: pool("a2"), toHash: pool("d3"), kind: STARTS, style: yellow},
+				{fromPos: 1, toPos: 1, fromHash: pool("b1"), toHash: pool("b3"), kind: CONTINUES, style: magenta},
+				{fromPos: 2, toPos: 2, fromHash: pool("c1"), toHash: pool("c3"), kind: CONTINUES, style: green},
 			},
 			prevCommit:  &models.Commit{Hash: pool("a1")},
 			expectedStr: "⏣─│─│─╮",
@@ -375,11 +375,11 @@ func TestRenderPipeSet(t *testing.T) {
 		{
 			name: "starting and terminating path crossing continuing path",
 			pipes: []*Pipe{
-				{fromPos: 0, toPos: 0, fromHash: "a1", toHash: "a2", kind: TERMINATES, style: red},
-				{fromPos: 0, toPos: 0, fromHash: "a2", toHash: "a3", kind: STARTS, style: yellow},
-				{fromPos: 0, toPos: 1, fromHash: "a2", toHash: "b3", kind: STARTS, style: yellow},
-				{fromPos: 1, toPos: 1, fromHash: "b1", toHash: "a2", kind: CONTINUES, style: green},
-				{fromPos: 2, toPos: 0, fromHash: "c1", toHash: "a2", kind: TERMINATES, style: magenta},
+				{fromPos: 0, toPos: 0, fromHash: pool("a1"), toHash: pool("a2"), kind: TERMINATES, style: red},
+				{fromPos: 0, toPos: 0, fromHash: pool("a2"), toHash: pool("a3"), kind: STARTS, style: yellow},
+				{fromPos: 0, toPos: 1, fromHash: pool("a2"), toHash: pool("b3"), kind: STARTS, style: yellow},
+				{fromPos: 1, toPos: 1, fromHash: pool("b1"), toHash: pool("a2"), kind: CONTINUES, style: green},
+				{fromPos: 2, toPos: 0, fromHash: pool("c1"), toHash: pool("a2"), kind: TERMINATES, style: magenta},
 			},
 			prevCommit:  &models.Commit{Hash: pool("a1")},
 			expectedStr: "⏣─│─╯",
@@ -390,11 +390,11 @@ func TestRenderPipeSet(t *testing.T) {
 		{
 			name: "another clash of starting and terminating paths",
 			pipes: []*Pipe{
-				{fromPos: 0, toPos: 0, fromHash: "a1", toHash: "a2", kind: TERMINATES, style: red},
-				{fromPos: 0, toPos: 0, fromHash: "a2", toHash: "a3", kind: STARTS, style: yellow},
-				{fromPos: 0, toPos: 1, fromHash: "a2", toHash: "b3", kind: STARTS, style: yellow},
-				{fromPos: 2, toPos: 2, fromHash: "c1", toHash: "c3", kind: CONTINUES, style: green},
-				{fromPos: 3, toPos: 0, fromHash: "d1", toHash: "a2", kind: TERMINATES, style: magenta},
+				{fromPos: 0, toPos: 0, fromHash: pool("a1"), toHash: pool("a2"), kind: TERMINATES, style: red},
+				{fromPos: 0, toPos: 0, fromHash: pool("a2"), toHash: pool("a3"), kind: STARTS, style: yellow},
+				{fromPos: 0, toPos: 1, fromHash: pool("a2"), toHash: pool("b3"), kind: STARTS, style: yellow},
+				{fromPos: 2, toPos: 2, fromHash: pool("c1"), toHash: pool("c3"), kind: CONTINUES, style: green},
+				{fromPos: 3, toPos: 0, fromHash: pool("d1"), toHash: pool("a2"), kind: TERMINATES, style: magenta},
 			},
 			prevCommit:  &models.Commit{Hash: pool("a1")},
 			expectedStr: "⏣─┬─│─╯",
@@ -405,8 +405,8 @@ func TestRenderPipeSet(t *testing.T) {
 		{
 			name: "commit whose previous commit is selected",
 			pipes: []*Pipe{
-				{fromPos: 0, toPos: 0, fromHash: "selected", toHash: "a2", kind: TERMINATES, style: red},
-				{fromPos: 0, toPos: 0, fromHash: "a2", toHash: "a3", kind: STARTS, style: yellow},
+				{fromPos: 0, toPos: 0, fromHash: pool("selected"), toHash: pool("a2"), kind: TERMINATES, style: red},
+				{fromPos: 0, toPos: 0, fromHash: pool("a2"), toHash: pool("a3"), kind: STARTS, style: yellow},
 			},
 			prevCommit:  &models.Commit{Hash: pool("selected")},
 			expectedStr: "◯",
@@ -417,8 +417,8 @@ func TestRenderPipeSet(t *testing.T) {
 		{
 			name: "commit whose previous commit is selected and is a merge commit",
 			pipes: []*Pipe{
-				{fromPos: 0, toPos: 0, fromHash: "selected", toHash: "a2", kind: TERMINATES, style: red},
-				{fromPos: 1, toPos: 1, fromHash: "selected", toHash: "b3", kind: CONTINUES, style: red},
+				{fromPos: 0, toPos: 0, fromHash: pool("selected"), toHash: pool("a2"), kind: TERMINATES, style: red},
+				{fromPos: 1, toPos: 1, fromHash: pool("selected"), toHash: pool("b3"), kind: CONTINUES, style: red},
 			},
 			prevCommit:  &models.Commit{Hash: pool("selected")},
 			expectedStr: "◯ │",
@@ -429,9 +429,9 @@ func TestRenderPipeSet(t *testing.T) {
 		{
 			name: "commit whose previous commit is selected and is a merge commit, with continuing pipe inbetween",
 			pipes: []*Pipe{
-				{fromPos: 0, toPos: 0, fromHash: "selected", toHash: "a2", kind: TERMINATES, style: red},
-				{fromPos: 1, toPos: 1, fromHash: "z1", toHash: "z3", kind: CONTINUES, style: green},
-				{fromPos: 2, toPos: 2, fromHash: "selected", toHash: "b3", kind: CONTINUES, style: red},
+				{fromPos: 0, toPos: 0, fromHash: pool("selected"), toHash: pool("a2"), kind: TERMINATES, style: red},
+				{fromPos: 1, toPos: 1, fromHash: pool("z1"), toHash: pool("z3"), kind: CONTINUES, style: green},
+				{fromPos: 2, toPos: 2, fromHash: pool("selected"), toHash: pool("b3"), kind: CONTINUES, style: red},
 			},
 			prevCommit:  &models.Commit{Hash: pool("selected")},
 			expectedStr: "◯ │ │",
@@ -442,10 +442,10 @@ func TestRenderPipeSet(t *testing.T) {
 		{
 			name: "when previous commit is selected, not a merge commit, and spawns a continuing pipe",
 			pipes: []*Pipe{
-				{fromPos: 0, toPos: 0, fromHash: "a1", toHash: "a2", kind: TERMINATES, style: red},
-				{fromPos: 0, toPos: 0, fromHash: "a2", toHash: "a3", kind: STARTS, style: green},
-				{fromPos: 0, toPos: 1, fromHash: "a2", toHash: "b3", kind: STARTS, style: green},
-				{fromPos: 1, toPos: 0, fromHash: "selected", toHash: "a2", kind: TERMINATES, style: yellow},
+				{fromPos: 0, toPos: 0, fromHash: pool("a1"), toHash: pool("a2"), kind: TERMINATES, style: red},
+				{fromPos: 0, toPos: 0, fromHash: pool("a2"), toHash: pool("a3"), kind: STARTS, style: green},
+				{fromPos: 0, toPos: 1, fromHash: pool("a2"), toHash: pool("b3"), kind: STARTS, style: green},
+				{fromPos: 1, toPos: 0, fromHash: pool("selected"), toHash: pool("a2"), kind: TERMINATES, style: yellow},
 			},
 			prevCommit:  &models.Commit{Hash: pool("selected")},
 			expectedStr: "⏣─╯",
@@ -490,43 +490,43 @@ func TestGetNextPipes(t *testing.T) {
 	}{
 		{
 			prevPipes: []*Pipe{
-				{fromPos: 0, toPos: 0, fromHash: "a", toHash: "b", kind: STARTS, style: style.FgDefault},
+				{fromPos: 0, toPos: 0, fromHash: pool("a"), toHash: pool("b"), kind: STARTS, style: style.FgDefault},
 			},
 			commit: &models.Commit{
 				Hash:    pool("b"),
 				Parents: []*string{pool("c")},
 			},
 			expected: []*Pipe{
-				{fromPos: 0, toPos: 0, fromHash: "a", toHash: "b", kind: TERMINATES, style: style.FgDefault},
-				{fromPos: 0, toPos: 0, fromHash: "b", toHash: "c", kind: STARTS, style: style.FgDefault},
+				{fromPos: 0, toPos: 0, fromHash: pool("a"), toHash: pool("b"), kind: TERMINATES, style: style.FgDefault},
+				{fromPos: 0, toPos: 0, fromHash: pool("b"), toHash: pool("c"), kind: STARTS, style: style.FgDefault},
 			},
 		},
 		{
 			prevPipes: []*Pipe{
-				{fromPos: 0, toPos: 0, fromHash: "a", toHash: "b", kind: TERMINATES, style: style.FgDefault},
-				{fromPos: 0, toPos: 0, fromHash: "b", toHash: "c", kind: STARTS, style: style.FgDefault},
-				{fromPos: 0, toPos: 1, fromHash: "b", toHash: "d", kind: STARTS, style: style.FgDefault},
+				{fromPos: 0, toPos: 0, fromHash: pool("a"), toHash: pool("b"), kind: TERMINATES, style: style.FgDefault},
+				{fromPos: 0, toPos: 0, fromHash: pool("b"), toHash: pool("c"), kind: STARTS, style: style.FgDefault},
+				{fromPos: 0, toPos: 1, fromHash: pool("b"), toHash: pool("d"), kind: STARTS, style: style.FgDefault},
 			},
 			commit: &models.Commit{
 				Hash:    pool("d"),
 				Parents: []*string{pool("e")},
 			},
 			expected: []*Pipe{
-				{fromPos: 0, toPos: 0, fromHash: "b", toHash: "c", kind: CONTINUES, style: style.FgDefault},
-				{fromPos: 1, toPos: 1, fromHash: "b", toHash: "d", kind: TERMINATES, style: style.FgDefault},
-				{fromPos: 1, toPos: 1, fromHash: "d", toHash: "e", kind: STARTS, style: style.FgDefault},
+				{fromPos: 0, toPos: 0, fromHash: pool("b"), toHash: pool("c"), kind: CONTINUES, style: style.FgDefault},
+				{fromPos: 1, toPos: 1, fromHash: pool("b"), toHash: pool("d"), kind: TERMINATES, style: style.FgDefault},
+				{fromPos: 1, toPos: 1, fromHash: pool("d"), toHash: pool("e"), kind: STARTS, style: style.FgDefault},
 			},
 		},
 		{
 			prevPipes: []*Pipe{
-				{fromPos: 0, toPos: 0, fromHash: "a", toHash: "root", kind: TERMINATES, style: style.FgDefault},
+				{fromPos: 0, toPos: 0, fromHash: pool("a"), toHash: pool("root"), kind: TERMINATES, style: style.FgDefault},
 			},
 			commit: &models.Commit{
 				Hash:    pool("root"),
 				Parents: []*string{},
 			},
 			expected: []*Pipe{
-				{fromPos: 1, toPos: 1, fromHash: "root", toHash: models.EmptyTreeCommitHash, kind: STARTS, style: style.FgDefault},
+				{fromPos: 1, toPos: 1, fromHash: pool("root"), toHash: pool(models.EmptyTreeCommitHash), kind: STARTS, style: style.FgDefault},
 			},
 		},
 	}
@@ -536,7 +536,7 @@ func TestGetNextPipes(t *testing.T) {
 
 	for _, test := range tests {
 		getStyle := func(c *models.Commit) style.TextStyle { return style.FgDefault }
-		pipes := getNextPipes(test.prevPipes, test.commit, getStyle)
+		pipes := getNextPipes(&hashPool, test.prevPipes, test.commit, getStyle)
 		// rendering cells so that it's easier to see what went wrong
 		actualStr := renderPipeSet(pipes, "selected", nil)
 		expectedStr := renderPipeSet(test.expected, "selected", nil)
@@ -552,19 +552,19 @@ func BenchmarkRenderCommitGraph(b *testing.B) {
 	oldColorLevel := color.ForceSetColorLevel(terminfo.ColorLevelMillions)
 	defer color.ForceSetColorLevel(oldColorLevel)
 
-	commits := generateCommits(50)
+	hashPool := utils.StringPool{}
+
+	commits := generateCommits(&hashPool, 50)
 	getStyle := func(commit *models.Commit) style.TextStyle {
 		return authors.AuthorStyle(commit.AuthorName)
 	}
 	b.ResetTimer()
 	for b.Loop() {
-		RenderCommitGraph(commits, "selected", getStyle)
+		RenderCommitGraph(&hashPool, commits, "selected", getStyle)
 	}
 }
 
-func generateCommits(count int) []*models.Commit {
-	hashPool := utils.StringPool{}
-
+func generateCommits(hashPool *utils.StringPool, count int) []*models.Commit {
 	rnd := rand.New(rand.NewSource(1234))
 	pool := []*models.Commit{{Hash: hashPool.Add("a"), AuthorName: "A"}}
 	commits := make([]*models.Commit, 0, count)

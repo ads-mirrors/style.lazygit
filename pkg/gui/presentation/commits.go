@@ -39,6 +39,7 @@ type bisectBounds struct {
 
 func GetCommitListDisplayStrings(
 	common *common.Common,
+	hashPool *utils.StringPool,
 	commits []*models.Commit,
 	branches []*models.Branch,
 	currentBranchName string,
@@ -92,7 +93,7 @@ func GetCommitListDisplayStrings(
 
 			if localSectionStart > 0 {
 				// we have some remote commits
-				pipeSets := loadPipesets(commits[:localSectionStart])
+				pipeSets := loadPipesets(hashPool, commits[:localSectionStart])
 				if startIdx < localSectionStart {
 					// some of the remote commits are visible
 					start := startIdx
@@ -109,7 +110,7 @@ func GetCommitListDisplayStrings(
 			}
 			if localSectionStart < len(commits) {
 				// we have some local commits
-				pipeSets := loadPipesets(commits[localSectionStart:])
+				pipeSets := loadPipesets(hashPool, commits[localSectionStart:])
 				if localSectionStart < endIdx {
 					// some of the local commits are visible
 					graphOffset := max(startIdx, localSectionStart)
@@ -133,7 +134,7 @@ func GetCommitListDisplayStrings(
 			// but we'll never include TODO commits as part of the graph because it'll be messy)
 			graphOffset := max(startIdx, rebaseOffset)
 
-			pipeSets := loadPipesets(commits[rebaseOffset:])
+			pipeSets := loadPipesets(hashPool, commits[rebaseOffset:])
 			pipeSetOffset := max(startIdx-rebaseOffset, 0)
 			graphPipeSets := pipeSets[pipeSetOffset:max(endIdx-rebaseOffset, 0)]
 			graphCommits := commits[graphOffset:endIdx]
@@ -245,7 +246,7 @@ func indexOfFirstNonTODOCommit(commits []*models.Commit) int {
 	return 0
 }
 
-func loadPipesets(commits []*models.Commit) [][]*graph.Pipe {
+func loadPipesets(hashPool *utils.StringPool, commits []*models.Commit) [][]*graph.Pipe {
 	// given that our cache key is a commit hash and a commit count, it's very important that we don't actually try to render pipes
 	// when dealing with things like filtered commits.
 	cacheKey := pipeSetCacheKey{
@@ -261,7 +262,7 @@ func loadPipesets(commits []*models.Commit) [][]*graph.Pipe {
 		getStyle := func(commit *models.Commit) style.TextStyle {
 			return authors.AuthorStyle(commit.AuthorName)
 		}
-		pipeSets = graph.GetPipeSets(commits, getStyle)
+		pipeSets = graph.GetPipeSets(hashPool, commits, getStyle)
 		pipeSetCache[cacheKey] = pipeSets
 	}
 

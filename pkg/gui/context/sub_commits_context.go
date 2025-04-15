@@ -60,6 +60,7 @@ func NewSubCommitsContext(
 		hasRebaseUpdateRefsConfig := c.Git().Config.GetRebaseUpdateRefs()
 		return presentation.GetCommitListDisplayStrings(
 			c.Common,
+			&c.Model().HashPool,
 			c.Model().SubCommits,
 			branches,
 			viewModel.GetRef().RefName(),
