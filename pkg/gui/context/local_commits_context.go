@@ -32,12 +32,12 @@ func NewLocalCommitsContext(c *ContextCommon) *LocalCommitsContext {
 	)
 
 	getDisplayStrings := func(startIdx int, endIdx int) [][]string {
-		selectedCommitHash := ""
+		var selectedCommitHash *string
 
 		if c.Context().Current().GetKey() == LOCAL_COMMITS_CONTEXT_KEY {
 			selectedCommit := viewModel.GetSelected()
 			if selectedCommit != nil {
-				selectedCommitHash = *selectedCommit.Hash
+				selectedCommitHash = selectedCommit.Hash
 			}
 		}
 

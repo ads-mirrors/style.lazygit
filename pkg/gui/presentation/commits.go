@@ -52,7 +52,7 @@ func GetCommitListDisplayStrings(
 	shortTimeFormat string,
 	now time.Time,
 	parseEmoji bool,
-	selectedCommitHash string,
+	selectedCommitHash *string,
 	startIdx int,
 	endIdx int,
 	showGraph bool,

@@ -222,7 +222,7 @@ func TestRenderCommitGraph(t *testing.T) {
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
 			getStyle := func(c *models.Commit) style.TextStyle { return style.FgDefault }
-			lines := RenderCommitGraph(&hashPool, test.commits, "blah", getStyle)
+			lines := RenderCommitGraph(&hashPool, test.commits, hashPool.Add("blah"), getStyle)
 
 			trimmedExpectedOutput := ""
 			for _, line := range strings.Split(strings.TrimPrefix(test.expectedOutput, "\n"), "\n") {
@@ -460,7 +460,7 @@ func TestRenderPipeSet(t *testing.T) {
 
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
-			actualStr := renderPipeSet(test.pipes, "selected", test.prevCommit)
+			actualStr := renderPipeSet(test.pipes, pool("selected"), test.prevCommit)
 			t.Log("actual cells:")
 			t.Log(actualStr)
 			expectedStr := ""
@@ -538,8 +538,8 @@ func TestGetNextPipes(t *testing.T) {
 		getStyle := func(c *models.Commit) style.TextStyle { return style.FgDefault }
 		pipes := getNextPipes(&hashPool, test.prevPipes, test.commit, getStyle)
 		// rendering cells so that it's easier to see what went wrong
-		actualStr := renderPipeSet(pipes, "selected", nil)
-		expectedStr := renderPipeSet(test.expected, "selected", nil)
+		actualStr := renderPipeSet(pipes, pool("selected"), nil)
+		expectedStr := renderPipeSet(test.expected, pool("selected"), nil)
 		t.Log("expected cells:")
 		t.Log(expectedStr)
 		t.Log("actual cells:")
@@ -560,7 +560,7 @@ func BenchmarkRenderCommitGraph(b *testing.B) {
 	}
 	b.ResetTimer()
 	for b.Loop() {
-		RenderCommitGraph(&hashPool, commits, "selected", getStyle)
+		RenderCommitGraph(&hashPool, commits, hashPool.Add("selected"), getStyle)
 	}
 }
 
