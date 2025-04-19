@@ -8,6 +8,7 @@ import (
 	"github.com/jesseduffield/lazygit/pkg/commands/oscommands"
 	"github.com/jesseduffield/lazygit/pkg/common"
 	"github.com/jesseduffield/lazygit/pkg/utils"
+	"github.com/samber/lo"
 )
 
 type ReflogCommitLoader struct {
@@ -31,7 +32,7 @@ func (self *ReflogCommitLoader) GetReflogCommits(hashPool *utils.StringPool, las
 		Config("log.showSignature=false").
 		Arg("-g").
 		Arg("--abbrev=40").
-		Arg("--format=%h%x00%ct%x00%gs%x00%p").
+		Arg("--format=%h%x00%ct%x00%gs%x00%P").
 		ArgIf(filterAuthor != "", "--author="+filterAuthor).
 		ArgIf(filterPath != "", "--follow", "--", filterPath).
 		ToArgv()
@@ -78,9 +79,11 @@ func (self *ReflogCommitLoader) parseLine(hashPool *utils.StringPool, line strin
 	unixTimestamp, _ := strconv.Atoi(fields[1])
 
 	parentHashes := fields[3]
-	parents := []string{}
+	parents := []*string{}
 	if len(parentHashes) > 0 {
-		parents = strings.Split(parentHashes, " ")
+		parents = lo.Map(strings.Split(parentHashes, " "), func(hash string, _ int) *string {
+			return hashPool.Add(hash)
+		})
 	}
 
 	return &models.Commit{

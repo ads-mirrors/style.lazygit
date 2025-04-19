@@ -230,9 +230,11 @@ func (self *CommitLoader) extractCommitFromLine(hashPool *utils.StringPool, line
 
 	unitTimestampInt, _ := strconv.Atoi(unixTimestamp)
 
-	parents := []string{}
+	parents := []*string{}
 	if len(parentHashes) > 0 {
-		parents = strings.Split(parentHashes, " ")
+		parents = lo.Map(strings.Split(parentHashes, " "), func(hash string, _ int) *string {
+			return hashPool.Add(hash)
+		})
 	}
 
 	return &models.Commit{
@@ -610,4 +612,4 @@ func (self *CommitLoader) getLogCmd(opts GetCommitsOptions) oscommands.ICmdObj {
 	return self.cmd.New(cmdArgs).DontLog()
 }
 
-const prettyFormat = `--pretty=format:%H%x00%at%x00%aN%x00%ae%x00%D%x00%p%x00%m%x00%s`
+const prettyFormat = `--pretty=format:%H%x00%at%x00%aN%x00%ae%x00%D%x00%P%x00%m%x00%s`

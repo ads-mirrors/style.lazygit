@@ -27,20 +27,20 @@ func TestRenderCommitGraph(t *testing.T) {
 		{
 			name: "with some merges",
 			commits: []*models.Commit{
-				{Hash: pool("1"), Parents: []string{"2"}},
-				{Hash: pool("2"), Parents: []string{"3"}},
-				{Hash: pool("3"), Parents: []string{"4"}},
-				{Hash: pool("4"), Parents: []string{"5", "7"}},
-				{Hash: pool("7"), Parents: []string{"5"}},
-				{Hash: pool("5"), Parents: []string{"8"}},
-				{Hash: pool("8"), Parents: []string{"9"}},
-				{Hash: pool("9"), Parents: []string{"A", "B"}},
-				{Hash: pool("B"), Parents: []string{"D"}},
-				{Hash: pool("D"), Parents: []string{"D"}},
-				{Hash: pool("A"), Parents: []string{"E"}},
-				{Hash: pool("E"), Parents: []string{"F"}},
-				{Hash: pool("F"), Parents: []string{"D"}},
-				{Hash: pool("D"), Parents: []string{"G"}},
+				{Hash: pool("1"), Parents: []*string{pool("2")}},
+				{Hash: pool("2"), Parents: []*string{pool("3")}},
+				{Hash: pool("3"), Parents: []*string{pool("4")}},
+				{Hash: pool("4"), Parents: []*string{pool("5"), pool("7")}},
+				{Hash: pool("7"), Parents: []*string{pool("5")}},
+				{Hash: pool("5"), Parents: []*string{pool("8")}},
+				{Hash: pool("8"), Parents: []*string{pool("9")}},
+				{Hash: pool("9"), Parents: []*string{pool("A"), pool("B")}},
+				{Hash: pool("B"), Parents: []*string{pool("D")}},
+				{Hash: pool("D"), Parents: []*string{pool("D")}},
+				{Hash: pool("A"), Parents: []*string{pool("E")}},
+				{Hash: pool("E"), Parents: []*string{pool("F")}},
+				{Hash: pool("F"), Parents: []*string{pool("D")}},
+				{Hash: pool("D"), Parents: []*string{pool("G")}},
 			},
 			expectedOutput: `
 			1 ◯
@@ -61,12 +61,12 @@ func TestRenderCommitGraph(t *testing.T) {
 		{
 			name: "with a path that has room to move to the left",
 			commits: []*models.Commit{
-				{Hash: pool("1"), Parents: []string{"2"}},
-				{Hash: pool("2"), Parents: []string{"3", "4"}},
-				{Hash: pool("4"), Parents: []string{"3", "5"}},
-				{Hash: pool("3"), Parents: []string{"5"}},
-				{Hash: pool("5"), Parents: []string{"6"}},
-				{Hash: pool("6"), Parents: []string{"7"}},
+				{Hash: pool("1"), Parents: []*string{pool("2")}},
+				{Hash: pool("2"), Parents: []*string{pool("3"), pool("4")}},
+				{Hash: pool("4"), Parents: []*string{pool("3"), pool("5")}},
+				{Hash: pool("3"), Parents: []*string{pool("5")}},
+				{Hash: pool("5"), Parents: []*string{pool("6")}},
+				{Hash: pool("6"), Parents: []*string{pool("7")}},
 			},
 			expectedOutput: `
 			1 ◯
@@ -79,13 +79,13 @@ func TestRenderCommitGraph(t *testing.T) {
 		{
 			name: "with a new commit",
 			commits: []*models.Commit{
-				{Hash: pool("1"), Parents: []string{"2"}},
-				{Hash: pool("2"), Parents: []string{"3", "4"}},
-				{Hash: pool("4"), Parents: []string{"3", "5"}},
-				{Hash: pool("Z"), Parents: []string{"Z"}},
-				{Hash: pool("3"), Parents: []string{"5"}},
-				{Hash: pool("5"), Parents: []string{"6"}},
-				{Hash: pool("6"), Parents: []string{"7"}},
+				{Hash: pool("1"), Parents: []*string{pool("2")}},
+				{Hash: pool("2"), Parents: []*string{pool("3"), pool("4")}},
+				{Hash: pool("4"), Parents: []*string{pool("3"), pool("5")}},
+				{Hash: pool("Z"), Parents: []*string{pool("Z")}},
+				{Hash: pool("3"), Parents: []*string{pool("5")}},
+				{Hash: pool("5"), Parents: []*string{pool("6")}},
+				{Hash: pool("6"), Parents: []*string{pool("7")}},
 			},
 			expectedOutput: `
 			1 ◯
@@ -99,12 +99,12 @@ func TestRenderCommitGraph(t *testing.T) {
 		{
 			name: "with a path that has room to move to the left and continues",
 			commits: []*models.Commit{
-				{Hash: pool("1"), Parents: []string{"2"}},
-				{Hash: pool("2"), Parents: []string{"3", "4"}},
-				{Hash: pool("3"), Parents: []string{"5", "4"}},
-				{Hash: pool("5"), Parents: []string{"7", "8"}},
-				{Hash: pool("4"), Parents: []string{"7"}},
-				{Hash: pool("7"), Parents: []string{"11"}},
+				{Hash: pool("1"), Parents: []*string{pool("2")}},
+				{Hash: pool("2"), Parents: []*string{pool("3"), pool("4")}},
+				{Hash: pool("3"), Parents: []*string{pool("5"), pool("4")}},
+				{Hash: pool("5"), Parents: []*string{pool("7"), pool("8")}},
+				{Hash: pool("4"), Parents: []*string{pool("7")}},
+				{Hash: pool("7"), Parents: []*string{pool("11")}},
 			},
 			expectedOutput: `
 			1 ◯
@@ -117,13 +117,13 @@ func TestRenderCommitGraph(t *testing.T) {
 		{
 			name: "with a path that has room to move to the left and continues",
 			commits: []*models.Commit{
-				{Hash: pool("1"), Parents: []string{"2"}},
-				{Hash: pool("2"), Parents: []string{"3", "4"}},
-				{Hash: pool("3"), Parents: []string{"5", "4"}},
-				{Hash: pool("5"), Parents: []string{"7", "8"}},
-				{Hash: pool("7"), Parents: []string{"4", "A"}},
-				{Hash: pool("4"), Parents: []string{"B"}},
-				{Hash: pool("B"), Parents: []string{"C"}},
+				{Hash: pool("1"), Parents: []*string{pool("2")}},
+				{Hash: pool("2"), Parents: []*string{pool("3"), pool("4")}},
+				{Hash: pool("3"), Parents: []*string{pool("5"), pool("4")}},
+				{Hash: pool("5"), Parents: []*string{pool("7"), pool("8")}},
+				{Hash: pool("7"), Parents: []*string{pool("4"), pool("A")}},
+				{Hash: pool("4"), Parents: []*string{pool("B")}},
+				{Hash: pool("B"), Parents: []*string{pool("C")}},
 			},
 			expectedOutput: `
 			1 ◯
@@ -137,11 +137,11 @@ func TestRenderCommitGraph(t *testing.T) {
 		{
 			name: "with a path that has room to move to the left and continues",
 			commits: []*models.Commit{
-				{Hash: pool("1"), Parents: []string{"2", "3"}},
-				{Hash: pool("3"), Parents: []string{"2"}},
-				{Hash: pool("2"), Parents: []string{"4", "5"}},
-				{Hash: pool("4"), Parents: []string{"6", "7"}},
-				{Hash: pool("6"), Parents: []string{"8"}},
+				{Hash: pool("1"), Parents: []*string{pool("2"), pool("3")}},
+				{Hash: pool("3"), Parents: []*string{pool("2")}},
+				{Hash: pool("2"), Parents: []*string{pool("4"), pool("5")}},
+				{Hash: pool("4"), Parents: []*string{pool("6"), pool("7")}},
+				{Hash: pool("6"), Parents: []*string{pool("8")}},
 			},
 			expectedOutput: `
 			1 ⏣─╮
@@ -153,11 +153,11 @@ func TestRenderCommitGraph(t *testing.T) {
 		{
 			name: "new merge path fills gap before continuing path on right",
 			commits: []*models.Commit{
-				{Hash: pool("1"), Parents: []string{"2", "3", "4", "5"}},
-				{Hash: pool("4"), Parents: []string{"2"}},
-				{Hash: pool("2"), Parents: []string{"A"}},
-				{Hash: pool("A"), Parents: []string{"6", "B"}},
-				{Hash: pool("B"), Parents: []string{"C"}},
+				{Hash: pool("1"), Parents: []*string{pool("2"), pool("3"), pool("4"), pool("5")}},
+				{Hash: pool("4"), Parents: []*string{pool("2")}},
+				{Hash: pool("2"), Parents: []*string{pool("A")}},
+				{Hash: pool("A"), Parents: []*string{pool("6"), pool("B")}},
+				{Hash: pool("B"), Parents: []*string{pool("C")}},
 			},
 			expectedOutput: `
 			1 ⏣─┬─┬─╮
@@ -169,14 +169,14 @@ func TestRenderCommitGraph(t *testing.T) {
 		{
 			name: "with a path that has room to move to the left and continues",
 			commits: []*models.Commit{
-				{Hash: pool("1"), Parents: []string{"2"}},
-				{Hash: pool("2"), Parents: []string{"3", "4"}},
-				{Hash: pool("3"), Parents: []string{"5", "4"}},
-				{Hash: pool("5"), Parents: []string{"7", "8"}},
-				{Hash: pool("7"), Parents: []string{"4", "A"}},
-				{Hash: pool("4"), Parents: []string{"B"}},
-				{Hash: pool("B"), Parents: []string{"C"}},
-				{Hash: pool("C"), Parents: []string{"D"}},
+				{Hash: pool("1"), Parents: []*string{pool("2")}},
+				{Hash: pool("2"), Parents: []*string{pool("3"), pool("4")}},
+				{Hash: pool("3"), Parents: []*string{pool("5"), pool("4")}},
+				{Hash: pool("5"), Parents: []*string{pool("7"), pool("8")}},
+				{Hash: pool("7"), Parents: []*string{pool("4"), pool("A")}},
+				{Hash: pool("4"), Parents: []*string{pool("B")}},
+				{Hash: pool("B"), Parents: []*string{pool("C")}},
+				{Hash: pool("C"), Parents: []*string{pool("D")}},
 			},
 			expectedOutput: `
 			1 ◯
@@ -191,16 +191,16 @@ func TestRenderCommitGraph(t *testing.T) {
 		{
 			name: "with a path that has room to move to the left and continues",
 			commits: []*models.Commit{
-				{Hash: pool("1"), Parents: []string{"2"}},
-				{Hash: pool("2"), Parents: []string{"3", "4"}},
-				{Hash: pool("3"), Parents: []string{"5", "4"}},
-				{Hash: pool("5"), Parents: []string{"7", "G"}},
-				{Hash: pool("7"), Parents: []string{"8", "A"}},
-				{Hash: pool("8"), Parents: []string{"4", "E"}},
-				{Hash: pool("4"), Parents: []string{"B"}},
-				{Hash: pool("B"), Parents: []string{"C"}},
-				{Hash: pool("C"), Parents: []string{"D"}},
-				{Hash: pool("D"), Parents: []string{"F"}},
+				{Hash: pool("1"), Parents: []*string{pool("2")}},
+				{Hash: pool("2"), Parents: []*string{pool("3"), pool("4")}},
+				{Hash: pool("3"), Parents: []*string{pool("5"), pool("4")}},
+				{Hash: pool("5"), Parents: []*string{pool("7"), pool("G")}},
+				{Hash: pool("7"), Parents: []*string{pool("8"), pool("A")}},
+				{Hash: pool("8"), Parents: []*string{pool("4"), pool("E")}},
+				{Hash: pool("4"), Parents: []*string{pool("B")}},
+				{Hash: pool("B"), Parents: []*string{pool("C")}},
+				{Hash: pool("C"), Parents: []*string{pool("D")}},
+				{Hash: pool("D"), Parents: []*string{pool("F")}},
 			},
 			expectedOutput: `
 			1 ◯
@@ -494,7 +494,7 @@ func TestGetNextPipes(t *testing.T) {
 			},
 			commit: &models.Commit{
 				Hash:    pool("b"),
-				Parents: []string{"c"},
+				Parents: []*string{pool("c")},
 			},
 			expected: []*Pipe{
 				{fromPos: 0, toPos: 0, fromHash: "a", toHash: "b", kind: TERMINATES, style: style.FgDefault},
@@ -509,7 +509,7 @@ func TestGetNextPipes(t *testing.T) {
 			},
 			commit: &models.Commit{
 				Hash:    pool("d"),
-				Parents: []string{"e"},
+				Parents: []*string{pool("e")},
 			},
 			expected: []*Pipe{
 				{fromPos: 0, toPos: 0, fromHash: "b", toHash: "c", kind: CONTINUES, style: style.FgDefault},
@@ -523,7 +523,7 @@ func TestGetNextPipes(t *testing.T) {
 			},
 			commit: &models.Commit{
 				Hash:    pool("root"),
-				Parents: []string{},
+				Parents: []*string{},
 			},
 			expected: []*Pipe{
 				{fromPos: 1, toPos: 1, fromHash: "root", toHash: models.EmptyTreeCommitHash, kind: STARTS, style: style.FgDefault},
@@ -588,7 +588,7 @@ func generateCommits(count int) []*models.Commit {
 				}
 				pool = append(pool, newParent)
 			}
-			currentCommit.Parents = append(currentCommit.Parents, *newParent.Hash)
+			currentCommit.Parents = append(currentCommit.Parents, newParent.Hash)
 		}
 
 		commits = append(commits, currentCommit)

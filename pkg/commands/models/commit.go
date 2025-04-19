@@ -54,7 +54,7 @@ type Commit struct {
 	Divergence    Divergence // set to DivergenceNone unless we are showing the divergence view
 
 	// Hashes of parent commits (will be multiple if it's a merge commit)
-	Parents []string
+	Parents []*string
 }
 
 func (c *Commit) ShortHash() string {

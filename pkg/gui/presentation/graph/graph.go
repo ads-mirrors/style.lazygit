@@ -138,7 +138,7 @@ func getNextPipes(prevPipes []*Pipe, commit *models.Commit, getStyle func(c *mod
 			fromPos:  pos,
 			toPos:    pos,
 			fromHash: *commit.Hash,
-			toHash:   commit.Parents[0],
+			toHash:   *commit.Parents[0],
 			kind:     STARTS,
 			style:    getStyle(commit),
 		})
@@ -228,7 +228,7 @@ func getNextPipes(prevPipes []*Pipe, commit *models.Commit, getStyle func(c *mod
 				fromPos:  pos,
 				toPos:    availablePos,
 				fromHash: *commit.Hash,
-				toHash:   parent,
+				toHash:   *parent,
 				kind:     STARTS,
 				style:    getStyle(commit),
 			})
