@@ -36,6 +36,9 @@ func TestGetCommits(t *testing.T) {
 		mainBranches    []string
 	}
 
+	hashPool := utils.StringPool{}
+	pool := func(s string) *string { return hashPool.Add(s) }
+
 	scenarios := []scenario{
 		{
 			testName: "should return no commits if there are none",
@@ -81,7 +84,7 @@ func TestGetCommits(t *testing.T) {
 
 			expectedCommits: []*models.Commit{
 				{
-					Hash:          "0eea75e8c631fba6b58135697835d58ba4c18dbc",
+					Hash:          pool("0eea75e8c631fba6b58135697835d58ba4c18dbc"),
 					Name:          "better typing for rebase mode",
 					Status:        models.StatusUnpushed,
 					Action:        models.ActionNone,
@@ -95,7 +98,7 @@ func TestGetCommits(t *testing.T) {
 					},
 				},
 				{
-					Hash:          "b21997d6b4cbdf84b149d8e6a2c4d06a8e9ec164",
+					Hash:          pool("b21997d6b4cbdf84b149d8e6a2c4d06a8e9ec164"),
 					Name:          "fix logging",
 					Status:        models.StatusPushed,
 					Action:        models.ActionNone,
@@ -109,7 +112,7 @@ func TestGetCommits(t *testing.T) {
 					},
 				},
 				{
-					Hash:          "e94e8fc5b6fab4cb755f29f1bdb3ee5e001df35c",
+					Hash:          pool("e94e8fc5b6fab4cb755f29f1bdb3ee5e001df35c"),
 					Name:          "refactor",
 					Status:        models.StatusPushed,
 					Action:        models.ActionNone,
@@ -123,7 +126,7 @@ func TestGetCommits(t *testing.T) {
 					},
 				},
 				{
-					Hash:          "d8084cd558925eb7c9c38afeed5725c21653ab90",
+					Hash:          pool("d8084cd558925eb7c9c38afeed5725c21653ab90"),
 					Name:          "WIP",
 					Status:        models.StatusPushed,
 					Action:        models.ActionNone,
@@ -137,7 +140,7 @@ func TestGetCommits(t *testing.T) {
 					},
 				},
 				{
-					Hash:          "65f910ebd85283b5cce9bf67d03d3f1a9ea3813a",
+					Hash:          pool("65f910ebd85283b5cce9bf67d03d3f1a9ea3813a"),
 					Name:          "WIP",
 					Status:        models.StatusPushed,
 					Action:        models.ActionNone,
@@ -151,7 +154,7 @@ func TestGetCommits(t *testing.T) {
 					},
 				},
 				{
-					Hash:          "26c07b1ab33860a1a7591a0638f9925ccf497ffa",
+					Hash:          pool("26c07b1ab33860a1a7591a0638f9925ccf497ffa"),
 					Name:          "WIP",
 					Status:        models.StatusMerged,
 					Action:        models.ActionNone,
@@ -165,7 +168,7 @@ func TestGetCommits(t *testing.T) {
 					},
 				},
 				{
-					Hash:          "3d4470a6c072208722e5ae9a54bcb9634959a1c5",
+					Hash:          pool("3d4470a6c072208722e5ae9a54bcb9634959a1c5"),
 					Name:          "WIP",
 					Status:        models.StatusMerged,
 					Action:        models.ActionNone,
@@ -179,7 +182,7 @@ func TestGetCommits(t *testing.T) {
 					},
 				},
 				{
-					Hash:          "053a66a7be3da43aacdc7aa78e1fe757b82c4dd2",
+					Hash:          pool("053a66a7be3da43aacdc7aa78e1fe757b82c4dd2"),
 					Name:          "refactoring the config struct",
 					Status:        models.StatusMerged,
 					Action:        models.ActionNone,
@@ -215,7 +218,7 @@ func TestGetCommits(t *testing.T) {
 
 			expectedCommits: []*models.Commit{
 				{
-					Hash:          "0eea75e8c631fba6b58135697835d58ba4c18dbc",
+					Hash:          pool("0eea75e8c631fba6b58135697835d58ba4c18dbc"),
 					Name:          "better typing for rebase mode",
 					Status:        models.StatusUnpushed,
 					Action:        models.ActionNone,
@@ -253,7 +256,7 @@ func TestGetCommits(t *testing.T) {
 
 			expectedCommits: []*models.Commit{
 				{
-					Hash:          "0eea75e8c631fba6b58135697835d58ba4c18dbc",
+					Hash:          pool("0eea75e8c631fba6b58135697835d58ba4c18dbc"),
 					Name:          "better typing for rebase mode",
 					Status:        models.StatusUnpushed,
 					Action:        models.ActionNone,
@@ -316,6 +319,7 @@ func TestGetCommits(t *testing.T) {
 			common.UserConfig().Git.MainBranches = scenario.mainBranches
 			opts := scenario.opts
 			opts.MainBranches = NewMainBranches(common, cmd)
+			opts.HashPool = &hashPool
 			commits, err := builder.GetCommits(opts)
 
 			assert.Equal(t, scenario.expectedCommits, commits)
@@ -327,6 +331,9 @@ func TestGetCommits(t *testing.T) {
 }
 
 func TestCommitLoader_getConflictedCommitImpl(t *testing.T) {
+	hashPool := utils.StringPool{}
+	pool := func(s string) *string { return hashPool.Add(s) }
+
 	scenarios := []struct {
 		testName          string
 		todos             []todo.Todo
@@ -357,7 +364,7 @@ func TestCommitLoader_getConflictedCommitImpl(t *testing.T) {
 			},
 			amendFileExists: false,
 			expectedResult: &models.Commit{
-				Hash:   "fa1afe1",
+				Hash:   pool("fa1afe1"),
 				Action: todo.Pick,
 				Status: models.StatusConflicted,
 			},
@@ -458,7 +465,7 @@ func TestCommitLoader_getConflictedCommitImpl(t *testing.T) {
 			},
 			amendFileExists: false,
 			expectedResult: &models.Commit{
-				Hash:   "fa1afe1",
+				Hash:   pool("fa1afe1"),
 				Action: todo.Pick,
 				Status: models.StatusConflicted,
 			},
@@ -487,7 +494,7 @@ func TestCommitLoader_getConflictedCommitImpl(t *testing.T) {
 			amendFileExists:   false,
 			messageFileExists: true,
 			expectedResult: &models.Commit{
-				Hash:   "fa1afe1",
+				Hash:   pool("fa1afe1"),
 				Action: todo.Edit,
 				Status: models.StatusConflicted,
 			},
@@ -523,7 +530,7 @@ func TestCommitLoader_getConflictedCommitImpl(t *testing.T) {
 				},
 			}
 
-			hash := builder.getConflictedCommitImpl(scenario.todos, scenario.doneTodos, scenario.amendFileExists, scenario.messageFileExists)
+			hash := builder.getConflictedCommitImpl(&hashPool, scenario.todos, scenario.doneTodos, scenario.amendFileExists, scenario.messageFileExists)
 			assert.Equal(t, scenario.expectedResult, hash)
 		})
 	}
@@ -537,33 +544,36 @@ func TestCommitLoader_setCommitMergedStatuses(t *testing.T) {
 		expectedCommits []*models.Commit
 	}
 
+	hashPool := utils.StringPool{}
+	pool := func(s string) *string { return hashPool.Add(s) }
+
 	scenarios := []scenario{
 		{
 			testName: "basic",
 			commits: []*models.Commit{
-				{Hash: "12345", Name: "1", Action: models.ActionNone, Status: models.StatusUnpushed},
-				{Hash: "67890", Name: "2", Action: models.ActionNone, Status: models.StatusPushed},
-				{Hash: "abcde", Name: "3", Action: models.ActionNone, Status: models.StatusPushed},
+				{Hash: pool("12345"), Name: "1", Action: models.ActionNone, Status: models.StatusUnpushed},
+				{Hash: pool("67890"), Name: "2", Action: models.ActionNone, Status: models.StatusPushed},
+				{Hash: pool("abcde"), Name: "3", Action: models.ActionNone, Status: models.StatusPushed},
 			},
 			ancestor: "67890",
 			expectedCommits: []*models.Commit{
-				{Hash: "12345", Name: "1", Action: models.ActionNone, Status: models.StatusUnpushed},
-				{Hash: "67890", Name: "2", Action: models.ActionNone, Status: models.StatusMerged},
-				{Hash: "abcde", Name: "3", Action: models.ActionNone, Status: models.StatusMerged},
+				{Hash: pool("12345"), Name: "1", Action: models.ActionNone, Status: models.StatusUnpushed},
+				{Hash: pool("67890"), Name: "2", Action: models.ActionNone, Status: models.StatusMerged},
+				{Hash: pool("abcde"), Name: "3", Action: models.ActionNone, Status: models.StatusMerged},
 			},
 		},
 		{
 			testName: "with update-ref",
 			commits: []*models.Commit{
-				{Hash: "12345", Name: "1", Action: models.ActionNone, Status: models.StatusUnpushed},
-				{Hash: "", Name: "", Action: todo.UpdateRef, Status: models.StatusNone},
-				{Hash: "abcde", Name: "3", Action: models.ActionNone, Status: models.StatusPushed},
+				{Hash: pool("12345"), Name: "1", Action: models.ActionNone, Status: models.StatusUnpushed},
+				{Hash: pool(""), Name: "", Action: todo.UpdateRef, Status: models.StatusNone},
+				{Hash: pool("abcde"), Name: "3", Action: models.ActionNone, Status: models.StatusPushed},
 			},
 			ancestor: "deadbeef",
 			expectedCommits: []*models.Commit{
-				{Hash: "12345", Name: "1", Action: models.ActionNone, Status: models.StatusUnpushed},
-				{Hash: "", Name: "", Action: todo.UpdateRef, Status: models.StatusNone},
-				{Hash: "abcde", Name: "3", Action: models.ActionNone, Status: models.StatusPushed},
+				{Hash: pool("12345"), Name: "1", Action: models.ActionNone, Status: models.StatusUnpushed},
+				{Hash: pool(""), Name: "", Action: todo.UpdateRef, Status: models.StatusNone},
+				{Hash: pool("abcde"), Name: "3", Action: models.ActionNone, Status: models.StatusPushed},
 			},
 		},
 	}

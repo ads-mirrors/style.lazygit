@@ -21,6 +21,9 @@ func formatExpected(expected string) string {
 }
 
 func TestGetCommitListDisplayStrings(t *testing.T) {
+	hashPool := utils.StringPool{}
+	pool := func(s string) *string { return hashPool.Add(s) }
+
 	scenarios := []struct {
 		testName                  string
 		commits                   []*models.Commit
@@ -57,8 +60,8 @@ func TestGetCommitListDisplayStrings(t *testing.T) {
 		{
 			testName: "some commits",
 			commits: []*models.Commit{
-				{Name: "commit1", Hash: "hash1"},
-				{Name: "commit2", Hash: "hash2"},
+				{Name: "commit1", Hash: pool("hash1")},
+				{Name: "commit2", Hash: pool("hash2")},
 			},
 			startIdx:                  0,
 			endIdx:                    2,
@@ -74,8 +77,8 @@ func TestGetCommitListDisplayStrings(t *testing.T) {
 		{
 			testName: "commit with tags",
 			commits: []*models.Commit{
-				{Name: "commit1", Hash: "hash1", Tags: []string{"tag1", "tag2"}},
-				{Name: "commit2", Hash: "hash2"},
+				{Name: "commit1", Hash: pool("hash1"), Tags: []string{"tag1", "tag2"}},
+				{Name: "commit2", Hash: pool("hash2")},
 			},
 			startIdx:                  0,
 			endIdx:                    2,
@@ -91,10 +94,10 @@ func TestGetCommitListDisplayStrings(t *testing.T) {
 		{
 			testName: "show local branch head, except the current branch, main branches, or merged branches",
 			commits: []*models.Commit{
-				{Name: "commit1", Hash: "hash1"},
-				{Name: "commit2", Hash: "hash2"},
-				{Name: "commit3", Hash: "hash3"},
-				{Name: "commit4", Hash: "hash4", Status: models.StatusMerged},
+				{Name: "commit1", Hash: pool("hash1")},
+				{Name: "commit2", Hash: pool("hash2")},
+				{Name: "commit3", Hash: pool("hash3")},
+				{Name: "commit4", Hash: pool("hash4"), Status: models.StatusMerged},
 			},
 			branches: []*models.Branch{
 				{Name: "current-branch", CommitHash: "hash1", Head: true},
@@ -120,8 +123,8 @@ func TestGetCommitListDisplayStrings(t *testing.T) {
 		{
 			testName: "show local branch head for head commit if updateRefs is on",
 			commits: []*models.Commit{
-				{Name: "commit1", Hash: "hash1"},
-				{Name: "commit2", Hash: "hash2"},
+				{Name: "commit1", Hash: pool("hash1")},
+				{Name: "commit2", Hash: pool("hash2")},
 			},
 			branches: []*models.Branch{
 				{Name: "current-branch", CommitHash: "hash1", Head: true},
@@ -143,8 +146,8 @@ func TestGetCommitListDisplayStrings(t *testing.T) {
 		{
 			testName: "don't show local branch head for head commit if updateRefs is off",
 			commits: []*models.Commit{
-				{Name: "commit1", Hash: "hash1"},
-				{Name: "commit2", Hash: "hash2"},
+				{Name: "commit1", Hash: pool("hash1")},
+				{Name: "commit2", Hash: pool("hash2")},
 			},
 			branches: []*models.Branch{
 				{Name: "current-branch", CommitHash: "hash1", Head: true},
@@ -166,9 +169,9 @@ func TestGetCommitListDisplayStrings(t *testing.T) {
 		{
 			testName: "show local branch head and tag if both exist",
 			commits: []*models.Commit{
-				{Name: "commit1", Hash: "hash1"},
-				{Name: "commit2", Hash: "hash2", Tags: []string{"some-tag"}},
-				{Name: "commit3", Hash: "hash3"},
+				{Name: "commit1", Hash: pool("hash1")},
+				{Name: "commit2", Hash: pool("hash2"), Tags: []string{"some-tag"}},
+				{Name: "commit3", Hash: pool("hash3")},
 			},
 			branches: []*models.Branch{
 				{Name: "some-branch", CommitHash: "hash2"},
@@ -188,11 +191,11 @@ func TestGetCommitListDisplayStrings(t *testing.T) {
 		{
 			testName: "showing graph",
 			commits: []*models.Commit{
-				{Name: "commit1", Hash: "hash1", Parents: []string{"hash2", "hash3"}},
-				{Name: "commit2", Hash: "hash2", Parents: []string{"hash3"}},
-				{Name: "commit3", Hash: "hash3", Parents: []string{"hash4"}},
-				{Name: "commit4", Hash: "hash4", Parents: []string{"hash5"}},
-				{Name: "commit5", Hash: "hash5", Parents: []string{"hash7"}},
+				{Name: "commit1", Hash: pool("hash1"), Parents: []string{"hash2", "hash3"}},
+				{Name: "commit2", Hash: pool("hash2"), Parents: []string{"hash3"}},
+				{Name: "commit3", Hash: pool("hash3"), Parents: []string{"hash4"}},
+				{Name: "commit4", Hash: pool("hash4"), Parents: []string{"hash5"}},
+				{Name: "commit5", Hash: pool("hash5"), Parents: []string{"hash7"}},
 			},
 			startIdx:                  0,
 			endIdx:                    5,
@@ -211,11 +214,11 @@ func TestGetCommitListDisplayStrings(t *testing.T) {
 		{
 			testName: "showing graph, including rebase commits",
 			commits: []*models.Commit{
-				{Name: "commit1", Hash: "hash1", Parents: []string{"hash2", "hash3"}, Action: todo.Pick},
-				{Name: "commit2", Hash: "hash2", Parents: []string{"hash3"}, Action: todo.Pick},
-				{Name: "commit3", Hash: "hash3", Parents: []string{"hash4"}},
-				{Name: "commit4", Hash: "hash4", Parents: []string{"hash5"}},
-				{Name: "commit5", Hash: "hash5", Parents: []string{"hash7"}},
+				{Name: "commit1", Hash: pool("hash1"), Parents: []string{"hash2", "hash3"}, Action: todo.Pick},
+				{Name: "commit2", Hash: pool("hash2"), Parents: []string{"hash3"}, Action: todo.Pick},
+				{Name: "commit3", Hash: pool("hash3"), Parents: []string{"hash4"}},
+				{Name: "commit4", Hash: pool("hash4"), Parents: []string{"hash5"}},
+				{Name: "commit5", Hash: pool("hash5"), Parents: []string{"hash7"}},
 			},
 			startIdx:                  0,
 			endIdx:                    5,
@@ -234,11 +237,11 @@ func TestGetCommitListDisplayStrings(t *testing.T) {
 		{
 			testName: "showing graph, including rebase commits, with offset",
 			commits: []*models.Commit{
-				{Name: "commit1", Hash: "hash1", Parents: []string{"hash2", "hash3"}, Action: todo.Pick},
-				{Name: "commit2", Hash: "hash2", Parents: []string{"hash3"}, Action: todo.Pick},
-				{Name: "commit3", Hash: "hash3", Parents: []string{"hash4"}},
-				{Name: "commit4", Hash: "hash4", Parents: []string{"hash5"}},
-				{Name: "commit5", Hash: "hash5", Parents: []string{"hash7"}},
+				{Name: "commit1", Hash: pool("hash1"), Parents: []string{"hash2", "hash3"}, Action: todo.Pick},
+				{Name: "commit2", Hash: pool("hash2"), Parents: []string{"hash3"}, Action: todo.Pick},
+				{Name: "commit3", Hash: pool("hash3"), Parents: []string{"hash4"}},
+				{Name: "commit4", Hash: pool("hash4"), Parents: []string{"hash5"}},
+				{Name: "commit5", Hash: pool("hash5"), Parents: []string{"hash7"}},
 			},
 			startIdx:                  1,
 			endIdx:                    5,
@@ -256,11 +259,11 @@ func TestGetCommitListDisplayStrings(t *testing.T) {
 		{
 			testName: "startIdx is past TODO commits",
 			commits: []*models.Commit{
-				{Name: "commit1", Hash: "hash1", Parents: []string{"hash2", "hash3"}, Action: todo.Pick},
-				{Name: "commit2", Hash: "hash2", Parents: []string{"hash3"}, Action: todo.Pick},
-				{Name: "commit3", Hash: "hash3", Parents: []string{"hash4"}},
-				{Name: "commit4", Hash: "hash4", Parents: []string{"hash5"}},
-				{Name: "commit5", Hash: "hash5", Parents: []string{"hash7"}},
+				{Name: "commit1", Hash: pool("hash1"), Parents: []string{"hash2", "hash3"}, Action: todo.Pick},
+				{Name: "commit2", Hash: pool("hash2"), Parents: []string{"hash3"}, Action: todo.Pick},
+				{Name: "commit3", Hash: pool("hash3"), Parents: []string{"hash4"}},
+				{Name: "commit4", Hash: pool("hash4"), Parents: []string{"hash5"}},
+				{Name: "commit5", Hash: pool("hash5"), Parents: []string{"hash7"}},
 			},
 			startIdx:                  3,
 			endIdx:                    5,
@@ -276,11 +279,11 @@ func TestGetCommitListDisplayStrings(t *testing.T) {
 		{
 			testName: "only showing TODO commits",
 			commits: []*models.Commit{
-				{Name: "commit1", Hash: "hash1", Parents: []string{"hash2", "hash3"}, Action: todo.Pick},
-				{Name: "commit2", Hash: "hash2", Parents: []string{"hash3"}, Action: todo.Pick},
-				{Name: "commit3", Hash: "hash3", Parents: []string{"hash4"}},
-				{Name: "commit4", Hash: "hash4", Parents: []string{"hash5"}},
-				{Name: "commit5", Hash: "hash5", Parents: []string{"hash7"}},
+				{Name: "commit1", Hash: pool("hash1"), Parents: []string{"hash2", "hash3"}, Action: todo.Pick},
+				{Name: "commit2", Hash: pool("hash2"), Parents: []string{"hash3"}, Action: todo.Pick},
+				{Name: "commit3", Hash: pool("hash3"), Parents: []string{"hash4"}},
+				{Name: "commit4", Hash: pool("hash4"), Parents: []string{"hash5"}},
+				{Name: "commit5", Hash: pool("hash5"), Parents: []string{"hash7"}},
 			},
 			startIdx:                  0,
 			endIdx:                    2,
@@ -296,11 +299,11 @@ func TestGetCommitListDisplayStrings(t *testing.T) {
 		{
 			testName: "no TODO commits, towards bottom",
 			commits: []*models.Commit{
-				{Name: "commit1", Hash: "hash1", Parents: []string{"hash2", "hash3"}},
-				{Name: "commit2", Hash: "hash2", Parents: []string{"hash3"}},
-				{Name: "commit3", Hash: "hash3", Parents: []string{"hash4"}},
-				{Name: "commit4", Hash: "hash4", Parents: []string{"hash5"}},
-				{Name: "commit5", Hash: "hash5", Parents: []string{"hash7"}},
+				{Name: "commit1", Hash: pool("hash1"), Parents: []string{"hash2", "hash3"}},
+				{Name: "commit2", Hash: pool("hash2"), Parents: []string{"hash3"}},
+				{Name: "commit3", Hash: pool("hash3"), Parents: []string{"hash4"}},
+				{Name: "commit4", Hash: pool("hash4"), Parents: []string{"hash5"}},
+				{Name: "commit5", Hash: pool("hash5"), Parents: []string{"hash7"}},
 			},
 			startIdx:                  4,
 			endIdx:                    5,
@@ -315,11 +318,11 @@ func TestGetCommitListDisplayStrings(t *testing.T) {
 		{
 			testName: "only TODO commits except last",
 			commits: []*models.Commit{
-				{Name: "commit1", Hash: "hash1", Parents: []string{"hash2", "hash3"}, Action: todo.Pick},
-				{Name: "commit2", Hash: "hash2", Parents: []string{"hash3"}, Action: todo.Pick},
-				{Name: "commit3", Hash: "hash3", Parents: []string{"hash4"}, Action: todo.Pick},
-				{Name: "commit4", Hash: "hash4", Parents: []string{"hash5"}, Action: todo.Pick},
-				{Name: "commit5", Hash: "hash5", Parents: []string{"hash7"}},
+				{Name: "commit1", Hash: pool("hash1"), Parents: []string{"hash2", "hash3"}, Action: todo.Pick},
+				{Name: "commit2", Hash: pool("hash2"), Parents: []string{"hash3"}, Action: todo.Pick},
+				{Name: "commit3", Hash: pool("hash3"), Parents: []string{"hash4"}, Action: todo.Pick},
+				{Name: "commit4", Hash: pool("hash4"), Parents: []string{"hash5"}, Action: todo.Pick},
+				{Name: "commit5", Hash: pool("hash5"), Parents: []string{"hash7"}},
 			},
 			startIdx:                  0,
 			endIdx:                    2,
@@ -335,14 +338,14 @@ func TestGetCommitListDisplayStrings(t *testing.T) {
 		{
 			testName: "graph in divergence view - all commits visible",
 			commits: []*models.Commit{
-				{Name: "commit1", Hash: "hash1r", Parents: []string{"hash2r"}, Divergence: models.DivergenceRight},
-				{Name: "commit2", Hash: "hash2r", Parents: []string{"hash3r", "hash5r"}, Divergence: models.DivergenceRight},
-				{Name: "commit3", Hash: "hash3r", Parents: []string{"hash4r"}, Divergence: models.DivergenceRight},
-				{Name: "commit1", Hash: "hash1l", Parents: []string{"hash2l"}, Divergence: models.DivergenceLeft},
-				{Name: "commit2", Hash: "hash2l", Parents: []string{"hash3l", "hash4l"}, Divergence: models.DivergenceLeft},
-				{Name: "commit3", Hash: "hash3l", Parents: []string{"hash4l"}, Divergence: models.DivergenceLeft},
-				{Name: "commit4", Hash: "hash4l", Parents: []string{"hash5l"}, Divergence: models.DivergenceLeft},
-				{Name: "commit5", Hash: "hash5l", Parents: []string{"hash6l"}, Divergence: models.DivergenceLeft},
+				{Name: "commit1", Hash: pool("hash1r"), Parents: []string{"hash2r"}, Divergence: models.DivergenceRight},
+				{Name: "commit2", Hash: pool("hash2r"), Parents: []string{"hash3r", "hash5r"}, Divergence: models.DivergenceRight},
+				{Name: "commit3", Hash: pool("hash3r"), Parents: []string{"hash4r"}, Divergence: models.DivergenceRight},
+				{Name: "commit1", Hash: pool("hash1l"), Parents: []string{"hash2l"}, Divergence: models.DivergenceLeft},
+				{Name: "commit2", Hash: pool("hash2l"), Parents: []string{"hash3l", "hash4l"}, Divergence: models.DivergenceLeft},
+				{Name: "commit3", Hash: pool("hash3l"), Parents: []string{"hash4l"}, Divergence: models.DivergenceLeft},
+				{Name: "commit4", Hash: pool("hash4l"), Parents: []string{"hash5l"}, Divergence: models.DivergenceLeft},
+				{Name: "commit5", Hash: pool("hash5l"), Parents: []string{"hash6l"}, Divergence: models.DivergenceLeft},
 			},
 			startIdx:                  0,
 			endIdx:                    8,
@@ -364,14 +367,14 @@ func TestGetCommitListDisplayStrings(t *testing.T) {
 		{
 			testName: "graph in divergence view - not all remote commits visible",
 			commits: []*models.Commit{
-				{Name: "commit1", Hash: "hash1r", Parents: []string{"hash2r"}, Divergence: models.DivergenceRight},
-				{Name: "commit2", Hash: "hash2r", Parents: []string{"hash3r", "hash5r"}, Divergence: models.DivergenceRight},
-				{Name: "commit3", Hash: "hash3r", Parents: []string{"hash4r"}, Divergence: models.DivergenceRight},
-				{Name: "commit1", Hash: "hash1l", Parents: []string{"hash2l"}, Divergence: models.DivergenceLeft},
-				{Name: "commit2", Hash: "hash2l", Parents: []string{"hash3l", "hash4l"}, Divergence: models.DivergenceLeft},
-				{Name: "commit3", Hash: "hash3l", Parents: []string{"hash4l"}, Divergence: models.DivergenceLeft},
-				{Name: "commit4", Hash: "hash4l", Parents: []string{"hash5l"}, Divergence: models.DivergenceLeft},
-				{Name: "commit5", Hash: "hash5l", Parents: []string{"hash6l"}, Divergence: models.DivergenceLeft},
+				{Name: "commit1", Hash: pool("hash1r"), Parents: []string{"hash2r"}, Divergence: models.DivergenceRight},
+				{Name: "commit2", Hash: pool("hash2r"), Parents: []string{"hash3r", "hash5r"}, Divergence: models.DivergenceRight},
+				{Name: "commit3", Hash: pool("hash3r"), Parents: []string{"hash4r"}, Divergence: models.DivergenceRight},
+				{Name: "commit1", Hash: pool("hash1l"), Parents: []string{"hash2l"}, Divergence: models.DivergenceLeft},
+				{Name: "commit2", Hash: pool("hash2l"), Parents: []string{"hash3l", "hash4l"}, Divergence: models.DivergenceLeft},
+				{Name: "commit3", Hash: pool("hash3l"), Parents: []string{"hash4l"}, Divergence: models.DivergenceLeft},
+				{Name: "commit4", Hash: pool("hash4l"), Parents: []string{"hash5l"}, Divergence: models.DivergenceLeft},
+				{Name: "commit5", Hash: pool("hash5l"), Parents: []string{"hash6l"}, Divergence: models.DivergenceLeft},
 			},
 			startIdx:                  2,
 			endIdx:                    8,
@@ -391,14 +394,14 @@ func TestGetCommitListDisplayStrings(t *testing.T) {
 		{
 			testName: "graph in divergence view - not all local commits",
 			commits: []*models.Commit{
-				{Name: "commit1", Hash: "hash1r", Parents: []string{"hash2r"}, Divergence: models.DivergenceRight},
-				{Name: "commit2", Hash: "hash2r", Parents: []string{"hash3r", "hash5r"}, Divergence: models.DivergenceRight},
-				{Name: "commit3", Hash: "hash3r", Parents: []string{"hash4r"}, Divergence: models.DivergenceRight},
-				{Name: "commit1", Hash: "hash1l", Parents: []string{"hash2l"}, Divergence: models.DivergenceLeft},
-				{Name: "commit2", Hash: "hash2l", Parents: []string{"hash3l", "hash4l"}, Divergence: models.DivergenceLeft},
-				{Name: "commit3", Hash: "hash3l", Parents: []string{"hash4l"}, Divergence: models.DivergenceLeft},
-				{Name: "commit4", Hash: "hash4l", Parents: []string{"hash5l"}, Divergence: models.DivergenceLeft},
-				{Name: "commit5", Hash: "hash5l", Parents: []string{"hash6l"}, Divergence: models.DivergenceLeft},
+				{Name: "commit1", Hash: pool("hash1r"), Parents: []string{"hash2r"}, Divergence: models.DivergenceRight},
+				{Name: "commit2", Hash: pool("hash2r"), Parents: []string{"hash3r", "hash5r"}, Divergence: models.DivergenceRight},
+				{Name: "commit3", Hash: pool("hash3r"), Parents: []string{"hash4r"}, Divergence: models.DivergenceRight},
+				{Name: "commit1", Hash: pool("hash1l"), Parents: []string{"hash2l"}, Divergence: models.DivergenceLeft},
+				{Name: "commit2", Hash: pool("hash2l"), Parents: []string{"hash3l", "hash4l"}, Divergence: models.DivergenceLeft},
+				{Name: "commit3", Hash: pool("hash3l"), Parents: []string{"hash4l"}, Divergence: models.DivergenceLeft},
+				{Name: "commit4", Hash: pool("hash4l"), Parents: []string{"hash5l"}, Divergence: models.DivergenceLeft},
+				{Name: "commit5", Hash: pool("hash5l"), Parents: []string{"hash6l"}, Divergence: models.DivergenceLeft},
 			},
 			startIdx:                  0,
 			endIdx:                    5,
@@ -417,14 +420,14 @@ func TestGetCommitListDisplayStrings(t *testing.T) {
 		{
 			testName: "graph in divergence view - no remote commits visible",
 			commits: []*models.Commit{
-				{Name: "commit1", Hash: "hash1r", Parents: []string{"hash2r"}, Divergence: models.DivergenceRight},
-				{Name: "commit2", Hash: "hash2r", Parents: []string{"hash3r", "hash5r"}, Divergence: models.DivergenceRight},
-				{Name: "commit3", Hash: "hash3r", Parents: []string{"hash4r"}, Divergence: models.DivergenceRight},
-				{Name: "commit1", Hash: "hash1l", Parents: []string{"hash2l"}, Divergence: models.DivergenceLeft},
-				{Name: "commit2", Hash: "hash2l", Parents: []string{"hash3l", "hash4l"}, Divergence: models.DivergenceLeft},
-				{Name: "commit3", Hash: "hash3l", Parents: []string{"hash4l"}, Divergence: models.DivergenceLeft},
-				{Name: "commit4", Hash: "hash4l", Parents: []string{"hash5l"}, Divergence: models.DivergenceLeft},
-				{Name: "commit5", Hash: "hash5l", Parents: []string{"hash6l"}, Divergence: models.DivergenceLeft},
+				{Name: "commit1", Hash: pool("hash1r"), Parents: []string{"hash2r"}, Divergence: models.DivergenceRight},
+				{Name: "commit2", Hash: pool("hash2r"), Parents: []string{"hash3r", "hash5r"}, Divergence: models.DivergenceRight},
+				{Name: "commit3", Hash: pool("hash3r"), Parents: []string{"hash4r"}, Divergence: models.DivergenceRight},
+				{Name: "commit1", Hash: pool("hash1l"), Parents: []string{"hash2l"}, Divergence: models.DivergenceLeft},
+				{Name: "commit2", Hash: pool("hash2l"), Parents: []string{"hash3l", "hash4l"}, Divergence: models.DivergenceLeft},
+				{Name: "commit3", Hash: pool("hash3l"), Parents: []string{"hash4l"}, Divergence: models.DivergenceLeft},
+				{Name: "commit4", Hash: pool("hash4l"), Parents: []string{"hash5l"}, Divergence: models.DivergenceLeft},
+				{Name: "commit5", Hash: pool("hash5l"), Parents: []string{"hash6l"}, Divergence: models.DivergenceLeft},
 			},
 			startIdx:                  4,
 			endIdx:                    8,
@@ -442,14 +445,14 @@ func TestGetCommitListDisplayStrings(t *testing.T) {
 		{
 			testName: "graph in divergence view - no local commits visible",
 			commits: []*models.Commit{
-				{Name: "commit1", Hash: "hash1r", Parents: []string{"hash2r"}, Divergence: models.DivergenceRight},
-				{Name: "commit2", Hash: "hash2r", Parents: []string{"hash3r", "hash5r"}, Divergence: models.DivergenceRight},
-				{Name: "commit3", Hash: "hash3r", Parents: []string{"hash4r"}, Divergence: models.DivergenceRight},
-				{Name: "commit1", Hash: "hash1l", Parents: []string{"hash2l"}, Divergence: models.DivergenceLeft},
-				{Name: "commit2", Hash: "hash2l", Parents: []string{"hash3l", "hash4l"}, Divergence: models.DivergenceLeft},
-				{Name: "commit3", Hash: "hash3l", Parents: []string{"hash4l"}, Divergence: models.DivergenceLeft},
-				{Name: "commit4", Hash: "hash4l", Parents: []string{"hash5l"}, Divergence: models.DivergenceLeft},
-				{Name: "commit5", Hash: "hash5l", Parents: []string{"hash6l"}, Divergence: models.DivergenceLeft},
+				{Name: "commit1", Hash: pool("hash1r"), Parents: []string{"hash2r"}, Divergence: models.DivergenceRight},
+				{Name: "commit2", Hash: pool("hash2r"), Parents: []string{"hash3r", "hash5r"}, Divergence: models.DivergenceRight},
+				{Name: "commit3", Hash: pool("hash3r"), Parents: []string{"hash4r"}, Divergence: models.DivergenceRight},
+				{Name: "commit1", Hash: pool("hash1l"), Parents: []string{"hash2l"}, Divergence: models.DivergenceLeft},
+				{Name: "commit2", Hash: pool("hash2l"), Parents: []string{"hash3l", "hash4l"}, Divergence: models.DivergenceLeft},
+				{Name: "commit3", Hash: pool("hash3l"), Parents: []string{"hash4l"}, Divergence: models.DivergenceLeft},
+				{Name: "commit4", Hash: pool("hash4l"), Parents: []string{"hash5l"}, Divergence: models.DivergenceLeft},
+				{Name: "commit5", Hash: pool("hash5l"), Parents: []string{"hash6l"}, Divergence: models.DivergenceLeft},
 			},
 			startIdx:                  0,
 			endIdx:                    2,
@@ -465,11 +468,11 @@ func TestGetCommitListDisplayStrings(t *testing.T) {
 		{
 			testName: "graph in divergence view - no remote commits present",
 			commits: []*models.Commit{
-				{Name: "commit1", Hash: "hash1l", Parents: []string{"hash2l"}, Divergence: models.DivergenceLeft},
-				{Name: "commit2", Hash: "hash2l", Parents: []string{"hash3l", "hash4l"}, Divergence: models.DivergenceLeft},
-				{Name: "commit3", Hash: "hash3l", Parents: []string{"hash4l"}, Divergence: models.DivergenceLeft},
-				{Name: "commit4", Hash: "hash4l", Parents: []string{"hash5l"}, Divergence: models.DivergenceLeft},
-				{Name: "commit5", Hash: "hash5l", Parents: []string{"hash6l"}, Divergence: models.DivergenceLeft},
+				{Name: "commit1", Hash: pool("hash1l"), Parents: []string{"hash2l"}, Divergence: models.DivergenceLeft},
+				{Name: "commit2", Hash: pool("hash2l"), Parents: []string{"hash3l", "hash4l"}, Divergence: models.DivergenceLeft},
+				{Name: "commit3", Hash: pool("hash3l"), Parents: []string{"hash4l"}, Divergence: models.DivergenceLeft},
+				{Name: "commit4", Hash: pool("hash4l"), Parents: []string{"hash5l"}, Divergence: models.DivergenceLeft},
+				{Name: "commit5", Hash: pool("hash5l"), Parents: []string{"hash6l"}, Divergence: models.DivergenceLeft},
 			},
 			startIdx:                  0,
 			endIdx:                    5,
@@ -488,9 +491,9 @@ func TestGetCommitListDisplayStrings(t *testing.T) {
 		{
 			testName: "graph in divergence view - no local commits present",
 			commits: []*models.Commit{
-				{Name: "commit1", Hash: "hash1r", Parents: []string{"hash2r"}, Divergence: models.DivergenceRight},
-				{Name: "commit2", Hash: "hash2r", Parents: []string{"hash3r", "hash5r"}, Divergence: models.DivergenceRight},
-				{Name: "commit3", Hash: "hash3r", Parents: []string{"hash4r"}, Divergence: models.DivergenceRight},
+				{Name: "commit1", Hash: pool("hash1r"), Parents: []string{"hash2r"}, Divergence: models.DivergenceRight},
+				{Name: "commit2", Hash: pool("hash2r"), Parents: []string{"hash3r", "hash5r"}, Divergence: models.DivergenceRight},
+				{Name: "commit3", Hash: pool("hash3r"), Parents: []string{"hash4r"}, Divergence: models.DivergenceRight},
 			},
 			startIdx:                  0,
 			endIdx:                    3,
@@ -507,8 +510,8 @@ func TestGetCommitListDisplayStrings(t *testing.T) {
 		{
 			testName: "custom time format",
 			commits: []*models.Commit{
-				{Name: "commit1", Hash: "hash1", UnixTimestamp: 1577844184, AuthorName: "Jesse Duffield"},
-				{Name: "commit2", Hash: "hash2", UnixTimestamp: 1576844184, AuthorName: "Jesse Duffield"},
+				{Name: "commit1", Hash: pool("hash1"), UnixTimestamp: 1577844184, AuthorName: "Jesse Duffield"},
+				{Name: "commit2", Hash: pool("hash2"), UnixTimestamp: 1576844184, AuthorName: "Jesse Duffield"},
 			},
 			fullDescription:           true,
 			timeFormat:                "2006-01-02",
