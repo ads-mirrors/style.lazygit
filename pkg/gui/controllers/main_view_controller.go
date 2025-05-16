@@ -63,11 +63,13 @@ func (self *MainViewController) GetMouseKeybindings(opts types.KeybindingsOpts) 
 					return self.onClick(opts)
 				}
 
-				self.context.SetParentContext(self.otherContext.GetParentContext())
-				self.c.Context().Push(self.context, types.OnFocusOpts{
-					ClickedWindowName:  self.context.GetWindowName(),
-					ClickedViewLineIdx: opts.Y,
-				})
+				if self.isOtherFocused() {
+					self.context.SetParentContext(self.otherContext.GetParentContext())
+					self.c.Context().Push(self.context, types.OnFocusOpts{
+						ClickedWindowName:  self.context.GetWindowName(),
+						ClickedViewLineIdx: opts.Y,
+					})
+				}
 
 				return nil
 			},
@@ -115,4 +117,8 @@ func (self *MainViewController) openSearch() error {
 
 func (self *MainViewController) isFocused() bool {
 	return self.c.Context().Current().GetKey() == self.context.GetKey()
+}
+
+func (self *MainViewController) isOtherFocused() bool {
+	return self.c.Context().Current().GetKey() == self.otherContext.GetKey()
 }
