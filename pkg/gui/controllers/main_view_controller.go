@@ -88,7 +88,7 @@ func (self *MainViewController) escape() error {
 }
 
 func (self *MainViewController) onClickInAlreadyFocusedView(opts gocui.ViewMouseBindingOpts) error {
-	parentCtx := self.context.GetParentContext()
+	parentCtx := self.context.GetOwningSidePanelContext()
 	if parentCtx.GetOnClickFocusedMainView() != nil {
 		return parentCtx.GetOnClickFocusedMainView()(self.context.GetViewName(), opts.Y)
 	}

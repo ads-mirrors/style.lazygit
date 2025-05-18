@@ -8,6 +8,11 @@ import (
 type MainContext struct {
 	*SimpleContext
 	*SearchTrait
+
+	// The side panel context that owns this main context. Only set if the main
+	// context is focused, not when the side panel is focused and is just
+	// rendering to it.
+	owningSidePanelContext types.Context
 }
 
 var _ types.ISearchableContext = (*MainContext)(nil)
@@ -38,4 +43,12 @@ func NewMainContext(
 
 func (self *MainContext) ModelSearchResults(searchStr string, caseSensitive bool) []gocui.SearchPosition {
 	return nil
+}
+
+func (self *MainContext) SetOwningSidePanelContext(context types.Context) {
+	self.owningSidePanelContext = context
+}
+
+func (self *MainContext) GetOwningSidePanelContext() types.Context {
+	return self.owningSidePanelContext
 }
