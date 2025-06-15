@@ -313,8 +313,6 @@ type Model struct {
 	HashPool *utils.StringPool
 }
 
-// if you add a new mutex here be sure to instantiate it. We're using pointers to
-// mutexes so that we can pass the mutexes to controllers.
 type Mutexes struct {
 	RefreshingFilesMutex    deadlock.Mutex
 	RefreshingBranchesMutex deadlock.Mutex
