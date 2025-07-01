@@ -161,6 +161,8 @@ func (self *PatchBuildingController) toggleSelection() error {
 		state.SetLineSelectMode()
 	}
 
+	state.SelectNextStageableLine()
+
 	return nil
 }
 
