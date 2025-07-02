@@ -339,8 +339,10 @@ func wrapPatchLines(diff string, view *gocui.View) ([]int, []int) {
 	return viewLineIndices, patchLineIndices
 }
 
-func (s *State) SelectNextStageableLine() {
+func (s *State) SelectNextStageableLineOfSameIncludedState(includedLines []int, included bool) {
 	_, lastLineIdx := s.SelectedPatchRange()
-	patchLineIdx := s.patch.GetNextChangeIdx(lastLineIdx + 1)
-	s.SelectLine(s.viewLineIndices[patchLineIdx])
+	patchLineIdx, found := s.patch.GetNextChangeIdxOfSameIncludedState(lastLineIdx+1, includedLines, included)
+	if found {
+		s.SelectLine(s.viewLineIndices[patchLineIdx])
+	}
 }
