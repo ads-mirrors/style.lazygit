@@ -9,6 +9,7 @@ import (
 	"time"
 
 	"github.com/jesseduffield/gocui"
+	"github.com/jesseduffield/lazygit/pkg/commands/oscommands"
 	"github.com/jesseduffield/lazygit/pkg/utils"
 	"github.com/sasha-s/go-deadlock"
 	"github.com/sirupsen/logrus"
@@ -165,7 +166,22 @@ func (self *ViewBufferManager) NewCmdTask(start func() (*exec.Cmd, io.Reader), p
 				// and the user is flicking through a bunch of items.
 				self.throttle = time.Since(startTime) < THROTTLE_TIME && timeToStart > COMMAND_START_THRESHOLD
 
-				// close the task's stdout pipe (or the pty if we're using one) to make the command terminate
+				// Kill the still-running command. We only need to do this for the case that the git
+				// command is not yet done producing the initial part of the output; this can happen
+				// for very long diffs when diff.algorithm = histogram is being used. In this case,
+				// closing the output pipe will cause the git command to terminate only the next
+				// time it tries to output something, which might still take a while. But we want to
+				// kill it immediately, so that we can show the next thing the user selected without
+				// delay.
+				//
+				// Unfortunately this will do nothing on Windows, so we'll have to live with the
+				// delay there.
+				if err := oscommands.TerminateProcessGracefully(cmd); err != nil {
+					self.Log.Errorf("error when trying to terminate cmd task: %v; Command: %v %v", err, cmd.Path, cmd.Args)
+				}
+
+				// close the task's stdout pipe (or the pty if we're using one) to make the command
+				// terminate on Windows, and so that the Wait call below doesn't block.
 				onDone()
 			}
 		})
