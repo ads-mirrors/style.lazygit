@@ -320,6 +320,8 @@ type PagingConfig struct {
 	UseConfig bool `yaml:"useConfig"`
 	// e.g. 'difft --color=always'
 	ExternalDiffCommand string `yaml:"externalDiffCommand"`
+	// If true, Lazygit will use git's `diff.external` config for paging. The advantage over `externalDiffCommand` is that this can be configured per file type in .gitattributes; see https://git-scm.com/docs/gitattributes#_defining_an_external_diff_driver.
+	UseExternalDiffGitConfig bool `yaml:"useExternalDiffGitConfig"`
 }
 
 type CommitConfig struct {
