@@ -1,6 +1,7 @@
 package gocui
 
 import (
+	"regexp"
 	"strings"
 
 	"github.com/mattn/go-runewidth"
@@ -33,14 +34,16 @@ func AutoWrapContent(content []rune, autoWrapWidth int) ([]rune, []CursorMapping
 	wrappedContent := make([]rune, 0, len(content)+estimatedNumberOfSoftLineBreaks)
 	startOfLine := 0
 	indexOfLastWhitespace := -1
+	var footNoteMatcher footNoteMatcher
 
 	for currentPos, r := range content {
 		if r == '\n' {
 			wrappedContent = append(wrappedContent, content[startOfLine:currentPos+1]...)
 			startOfLine = currentPos + 1
 			indexOfLastWhitespace = -1
+			footNoteMatcher.reset()
 		} else {
-			if r == ' ' {
+			if r == ' ' && !footNoteMatcher.isFootNote() {
 				indexOfLastWhitespace = currentPos + 1
 			} else if currentPos-startOfLine >= autoWrapWidth && indexOfLastWhitespace >= 0 {
 				wrapAt := indexOfLastWhitespace
@@ -50,12 +53,51 @@ func AutoWrapContent(content []rune, autoWrapWidth int) ([]rune, []CursorMapping
 				startOfLine = wrapAt
 				indexOfLastWhitespace = -1
 			}
+			footNoteMatcher.addRune(r)
 		}
 	}
 
 	wrappedContent = append(wrappedContent, content[startOfLine:]...)
 
 	return wrappedContent, cursorMapping
+}
+
+var footNoteRe = regexp.MustCompile(`^\[\d+\]:\s*$`)
+
+type footNoteMatcher struct {
+	lineStr        strings.Builder
+	didFailToMatch bool
+}
+
+func (self *footNoteMatcher) addRune(r rune) {
+	if self.didFailToMatch {
+		return
+	}
+
+	if self.lineStr.Len() == 0 && r != '[' {
+		self.didFailToMatch = true
+		return
+	}
+
+	self.lineStr.WriteRune(r)
+}
+
+func (self *footNoteMatcher) isFootNote() bool {
+	if self.didFailToMatch {
+		return false
+	}
+
+	if footNoteRe.MatchString(self.lineStr.String()) {
+		return true
+	}
+
+	self.didFailToMatch = true
+	return false
+}
+
+func (self *footNoteMatcher) reset() {
+	self.lineStr.Reset()
+	self.didFailToMatch = false
 }
 
 func (self *TextArea) autoWrapContent() {
