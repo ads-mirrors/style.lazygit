@@ -52,6 +52,7 @@ func AutoWrapContent(content []rune, autoWrapWidth int) ([]rune, []CursorMapping
 				cursorMapping = append(cursorMapping, CursorMapping{wrapAt, len(wrappedContent)})
 				startOfLine = wrapAt
 				indexOfLastWhitespace = -1
+				footNoteMatcher.reset()
 			}
 			footNoteMatcher.addRune(r)
 		}
