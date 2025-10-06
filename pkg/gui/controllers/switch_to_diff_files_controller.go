@@ -90,6 +90,11 @@ func (self *SwitchToDiffFilesController) enter() error {
 		Scope: []types.RefreshableView{types.COMMIT_FILES},
 	})
 
+	if filterPath := self.c.Modes().Filtering.GetPath(); filterPath != "" {
+		commitFilesContext.CommitFileTreeViewModel.SelectPath(
+			filterPath, self.c.UserConfig().Gui.ShowRootItemInFileTree)
+	}
+
 	self.c.Context().Push(commitFilesContext, types.OnFocusOpts{})
 	return nil
 }
