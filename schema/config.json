@@ -41,14 +41,14 @@
       "properties": {
         "pattern": {
           "type": "string",
-          "description": "pattern to match on. E.g. for 'feature/AB-123' to match on the AB-123 use \"^\\\\w+\\\\/(\\\\w+-\\\\w+).*\"",
+          "description": "pattern to match on. E.g. for 'feature/AB-123' to match on the AB-123\nuse \"^\\\\w+\\\\/(\\\\w+-\\\\w+).*\"",
           "examples": [
             "^\\w+\\/(\\w+-\\w+).*"
           ]
         },
         "replace": {
           "type": "string",
-          "description": "Replace directive. E.g. for 'feature/AB-123' to start the commit message with 'AB-123 ' use \"[$1] \"",
+          "description": "Replace directive. E.g. for 'feature/AB-123' to start the commit message\nwith 'AB-123 ' use \"[$1] \"",
           "examples": [
             "[$1]"
           ]
@@ -61,18 +61,18 @@
       "properties": {
         "key": {
           "type": "string",
-          "description": "The key to trigger the command. Use a single letter or one of the values from https://github.com/jesseduffield/lazygit/blob/master/docs/keybindings/Custom_Keybindings.md"
+          "description": "The key to trigger the command. Use a single letter or one of the values from\nhttps://github.com/jesseduffield/lazygit/blob/master/docs/keybindings/Custom_Keybindings.md"
         },
         "commandMenu": {
           "items": {
             "$ref": "#/$defs/CustomCommand"
           },
           "type": "array",
-          "description": "Instead of defining a single custom command, create a menu of custom commands. Useful for grouping related commands together under a single keybinding, and for keeping them out of the global keybindings menu.\nWhen using this, all other fields except Key and Description are ignored and must be empty."
+          "description": "Instead of defining a single custom command, create a menu of custom\ncommands. Useful for grouping related commands together under a single\nkeybinding, and for keeping them out of the global keybindings menu.\nWhen using this, all other fields except Key and Description are\nignored and must be empty."
         },
         "context": {
           "type": "string",
-          "description": "The context in which to listen for the key. Valid values are: status, files, worktrees, localBranches, remotes, remoteBranches, tags, commits, reflogCommits, subCommits, commitFiles, stash, and global. Multiple contexts separated by comma are allowed; most useful for \"commits, subCommits\" or \"files, commitFiles\".",
+          "description": "The context in which to listen for the key. Valid values are: status,\nfiles, worktrees, localBranches, remotes, remoteBranches, tags, commits,\nreflogCommits, subCommits, commitFiles, stash, and global.\nMultiple contexts separated by comma are allowed; most useful\nfor \"commits, subCommits\" or \"files, commitFiles\".",
           "examples": [
             "status",
             "files",
@@ -101,7 +101,7 @@
             "$ref": "#/$defs/CustomCommandPrompt"
           },
           "type": "array",
-          "description": "A list of prompts that will request user input before running the final command"
+          "description": "A list of prompts that will request user input before running the\nfinal command"
         },
         "loadingText": {
           "type": "string",
@@ -123,11 +123,11 @@
             "logWithPty",
             "popup"
           ],
-          "description": "Where the output of the command should go. 'none' discards it, 'terminal' suspends lazygit and runs the command in the terminal (useful for commands that require user input), 'log' streams it to the command log, 'logWithPty' is like 'log' but runs the command in a pseudo terminal (can be useful for commands that produce colored output when the output is a terminal), and 'popup' shows it in a popup."
+          "description": "Where the output of the command should go. Possible values are:\n- 'none': discards the output\n- 'terminal': suspends lazygit and runs the command in the terminal\n  (useful for commands that require user input)\n- 'log': streams it to the command log\n- 'logWithPty': like 'log' but runs the command in a pseudo terminal\n  (can be useful for commands that produce colored output when the\n  output is a terminal)\n- 'popup': shows it in a popup"
         },
         "outputTitle": {
           "type": "string",
-          "description": "The title to display in the popup panel if output is set to 'popup'. If left unset, the command will be used as the title."
+          "description": "The title to display in the popup panel if output is set to 'popup'.\nIf left unset, the command will be used as the title."
         },
         "after": {
           "$ref": "#/$defs/CustomCommandAfterHook",
@@ -176,7 +176,7 @@
         },
         "key": {
           "type": "string",
-          "description": "Used to reference the entered value from within the custom command. E.g. a prompt with `key: 'Branch'` can be referred to as `{{.Form.Branch}}` in the command"
+          "description": "Used to reference the entered value from within the custom command.\nE.g. a prompt with `key: 'Branch'` can be referred to as\n`{{.Form.Branch}}` in the command"
         },
         "title": {
           "type": "string",
@@ -213,21 +213,21 @@
         },
         "filter": {
           "type": "string",
-          "description": "The regexp to run specifying groups which are going to be kept from the command's output.\nOnly for menuFromCommand prompts.",
+          "description": "The regexp to run specifying groups which are going to be kept from the\ncommand's output.\nOnly for menuFromCommand prompts.",
           "examples": [
             ".*{{.SelectedRemote.Name }}/(?P\u003cbranch\u003e.*)"
           ]
         },
         "valueFormat": {
           "type": "string",
-          "description": "How to format matched groups from the filter to construct a menu item's value.\nOnly for menuFromCommand prompts.",
+          "description": "How to format matched groups from the filter to construct a menu item's\nvalue.\nOnly for menuFromCommand prompts.",
           "examples": [
             "{{ .branch }}"
           ]
         },
         "labelFormat": {
           "type": "string",
-          "description": "Like valueFormat but for the labels. If `labelFormat` is not specified, `valueFormat` is shown instead.\nOnly for menuFromCommand prompts.",
+          "description": "Like valueFormat but for the labels. If `labelFormat` is not specified,\n`valueFormat` is shown instead.\nOnly for menuFromCommand prompts.",
           "examples": [
             "{{ .branch | green }}"
           ]
@@ -249,11 +249,11 @@
             "remoteBranches",
             "tags"
           ],
-          "description": "Uses built-in logic to obtain the suggestions. One of 'authors' | 'branches' | 'files' | 'refs' | 'remotes' | 'remoteBranches' | 'tags'"
+          "description": "Uses built-in logic to obtain the suggestions.\nOne of 'authors' | 'branches' | 'files' | 'refs' | 'remotes' | 'remoteBranches' | 'tags'"
         },
         "command": {
           "type": "string",
-          "description": "Command to run such that each line in the output becomes a suggestion. Mutually exclusive with 'preset' field.",
+          "description": "Command to run such that each line in the output becomes a suggestion.\nMutually exclusive with 'preset' field.",
           "examples": [
             "git fetch {{.Form.Remote}} {{.Form.Branch}} \u0026\u0026 git checkout FETCH_HEAD"
           ]
@@ -276,7 +276,7 @@
             "$ref": "#/$defs/IconProperties"
           },
           "type": "object",
-          "description": "Map of file extensions (including the dot) to icon properties (icon and color)"
+          "description": "Map of file extensions (including the dot) to icon properties\n(icon and color)"
         }
       },
       "additionalProperties": false,
@@ -303,7 +303,7 @@
           },
           "type": "array",
           "uniqueItems": true,
-          "description": "list of branches that are considered 'main' branches, used when displaying commits",
+          "description": "list of branches that are considered 'main' branches, used when\ndisplaying commits",
           "default": [
             "master",
             "main"
@@ -311,7 +311,7 @@
         },
         "skipHookPrefix": {
           "type": "string",
-          "description": "Prefix to use when skipping hooks. E.g. if set to 'WIP', then pre-commit hooks will be skipped when the commit message starts with 'WIP'",
+          "description": "Prefix to use when skipping hooks. E.g. if set to 'WIP', then pre-commit\nhooks will be skipped when the commit message starts with 'WIP'",
           "default": "WIP"
         },
         "autoFetch": {
@@ -331,7 +331,7 @@
             "onlyMainBranches",
             "allBranches"
           ],
-          "description": "If not \"none\", lazygit will automatically fast-forward local branches to match their upstream after fetching. Applies to branches that are not the currently checked out branch, and only to those that are strictly behind their upstream (as opposed to diverged).\nPossible values: 'none' | 'onlyMainBranches' | 'allBranches'",
+          "description": "If not \"none\", lazygit will automatically fast-forward local branches\nto match their upstream after fetching. Applies to branches that are not\nthe currently checked out branch, and only to those that are strictly\nbehind their upstream (as opposed to diverged).\nPossible values: 'none' | 'onlyMainBranches' | 'allBranches'",
           "default": "onlyMainBranches"
         },
         "fetchAll": {
@@ -354,26 +354,26 @@
             "type": "string"
           },
           "type": "array",
-          "description": "Commands used to display git log of all branches in the main window, they will be cycled in order of appearance (array of strings)",
+          "description": "Commands used to display git log of all branches in the main window,\nthey will be cycled in order of appearance (array of strings)",
           "default": [
             "git log --graph --all --color=always --abbrev-commit --decorate --date=relative  --pretty=medium"
           ]
         },
         "ignoreWhitespaceInDiffView": {
           "type": "boolean",
-          "description": "If true, git diffs are rendered with the `--ignore-all-space` flag, which ignores whitespace changes. Can be toggled from within Lazygit with `\u003cc-w\u003e`.",
+          "description": "If true, git diffs are rendered with the `--ignore-all-space` flag,\nwhich ignores whitespace changes. Can be toggled from within Lazygit\nwith `\u003cc-w\u003e`.",
           "default": false
         },
         "diffContextSize": {
           "type": "integer",
-          "description": "The number of lines of context to show around each diff hunk. Can be changed from within Lazygit with the `{` and `}` keys.",
+          "description": "The number of lines of context to show around each diff hunk. Can be\nchanged from within Lazygit with the `{` and `}` keys.",
           "default": 3
         },
         "renameSimilarityThreshold": {
           "type": "integer",
           "maximum": 100,
           "minimum": 0,
-          "description": "The threshold for considering a file to be renamed, in percent. Can be changed from within Lazygit with the `(` and `)` keys.",
+          "description": "The threshold for considering a file to be renamed, in percent. Can be\nchanged from within Lazygit with the `(` and `)` keys.",
           "default": 50
         },
         "overrideGpg": {
@@ -423,7 +423,7 @@
             "recency",
             "alphabetical"
           ],
-          "description": "How branches are sorted in the local branches view.\nOne of: 'date' (default) | 'recency' | 'alphabetical'\nCan be changed from within Lazygit with the Sort Order menu (`s`) in the branches panel.",
+          "description": "How branches are sorted in the local branches view.\nOne of: 'date' (default) | 'recency' | 'alphabetical'\nCan be changed from within Lazygit with the Sort Order menu (`s`) in\nthe branches panel.",
           "default": "date"
         },
         "remoteBranchSortOrder": {
@@ -432,7 +432,7 @@
             "date",
             "alphabetical"
           ],
-          "description": "How branches are sorted in the remote branches view.\nOne of: 'date' (default) | 'alphabetical'\nCan be changed from within Lazygit with the Sort Order menu (`s`) in the remote branches panel.",
+          "description": "How branches are sorted in the remote branches view.\nOne of: 'date' (default) | 'alphabetical'\nCan be changed from within Lazygit with the Sort Order menu (`s`) in\nthe remote branches panel.",
           "default": "date"
         },
         "truncateCopiedCommitHashesTo": {
@@ -496,12 +496,12 @@
         "tabWidth": {
           "type": "integer",
           "minimum": 1,
-          "description": "The number of spaces per tab; used for everything that's shown in the main view, but probably mostly relevant for diffs.\nNote that when using a pager, the pager has its own tab width setting, so you need to pass it separately in the pager command.",
+          "description": "The number of spaces per tab; used for everything that's shown in the\nmain view, but probably mostly relevant for diffs.\nNote that when using a pager, the pager has its own tab width setting,\nso you need to pass it separately in the pager command.",
           "default": 4
         },
         "mouseEvents": {
           "type": "boolean",
-          "description": "If true, capture mouse events.\nWhen mouse events are captured, it's a little harder to select text: e.g. requiring you to hold the option key when on macOS.",
+          "description": "If true, capture mouse events.\nWhen mouse events are captured, it's a little harder to select text: e.g.\nrequiring you to hold the option key when on macOS.",
           "default": true
         },
         "skipAmendWarning": {
@@ -521,7 +521,7 @@
         },
         "skipNoStagedFilesWarning": {
           "type": "boolean",
-          "description": "If true, do not show a warning when attempting to commit without any staged files; instead stage all unstaged files.",
+          "description": "If true, do not show a warning when attempting to commit without any staged\nfiles; instead stage all unstaged files.",
           "default": false
         },
         "skipRewordInEditorWarning": {
@@ -533,17 +533,17 @@
           "type": "number",
           "maximum": 1,
           "minimum": 0,
-          "description": "Fraction of the total screen width to use for the left side section. You may want to pick a small number (e.g. 0.2) if you're using a narrow screen, so that you can see more of the main section.\nNumber from 0 to 1.0.",
+          "description": "Fraction of the total screen width to use for the left side section.\nYou may want to pick a small number (e.g. 0.2) if you're using a narrow\nscreen, so that you can see more of the main section.\nNumber from 0 to 1.0.",
           "default": 0.3333
         },
         "expandFocusedSidePanel": {
           "type": "boolean",
-          "description": "If true, increase the height of the focused side window; creating an accordion effect.",
+          "description": "If true, increase the height of the focused side window; creating an\naccordion effect.",
           "default": false
         },
         "expandedSidePanelWeight": {
           "type": "integer",
-          "description": "The weight of the expanded side panel, relative to the other panels. 2 means\ntwice as tall as the other panels. Only relevant if `expandFocusedSidePanel` is true.",
+          "description": "The weight of the expanded side panel, relative to the other panels.\n2 means twice as tall as the other panels. Only relevant if\n`expandFocusedSidePanel` is true.",
           "default": 2
         },
         "mainPanelSplitMode": {
@@ -553,12 +553,12 @@
             "flexible",
             "vertical"
           ],
-          "description": "Sometimes the main window is split in two (e.g. when the selected file has both staged and unstaged changes). This setting controls how the two sections are split.\nOptions are:\n- 'horizontal': split the window horizontally\n- 'vertical': split the window vertically\n- 'flexible': (default) split the window horizontally if the window is wide enough, otherwise split vertically",
+          "description": "Sometimes the main window is split in two (e.g. when the selected file\nhas both staged and unstaged changes). This setting controls how the\ntwo sections are split.\nOptions are:\n- 'horizontal': split the window horizontally\n- 'vertical': split the window vertically\n- 'flexible': (default) split the window horizontally if the window is\n              wide enough, otherwise split vertically",
           "default": "flexible"
         },
         "enlargedSideViewLocation": {
           "type": "string",
-          "description": "How the window is split when in half screen mode (i.e. after hitting '+' once).\nPossible values:\n- 'left': split the window horizontally (side panel on the left, main view on the right)\n- 'top': split the window vertically (side panel on top, main view below)",
+          "description": "How the window is split when in half screen mode (i.e. after hitting\n'+' once).\nPossible values:\n- 'left': split the window horizontally (side panel on the left, main\n          view on the right)\n- 'top': split the window vertically (side panel on top, main view below)",
           "default": "left"
         },
         "wrapLinesInStagingView": {
@@ -568,7 +568,7 @@
         },
         "useHunkModeInStagingView": {
           "type": "boolean",
-          "description": "If true, hunk selection mode will be enabled by default when entering the staging view.",
+          "description": "If true, hunk selection mode will be enabled by default when entering\nthe staging view.",
           "default": true
         },
         "language": {
@@ -584,7 +584,7 @@
             "ko",
             "ru"
           ],
-          "description": "One of 'auto' (default) | 'en' | 'zh-CN' | 'zh-TW' | 'pl' | 'nl' | 'ja' | 'ko' | 'ru'",
+          "description": "One of 'auto' (default) | 'en' | 'zh-CN' | 'zh-TW' | 'pl' | 'nl' | 'ja' | 'ko' | 'ru' | 'pt'",
           "default": "auto"
         },
         "timeFormat": {
@@ -612,12 +612,12 @@
         },
         "showFileTree": {
           "type": "boolean",
-          "description": "If true, display the files in the file views as a tree. If false, display the files as a flat list.\nThis can be toggled from within Lazygit with the '`' key, but that will not change the default.",
+          "description": "If true, display the files in the file views as a tree. If false,\ndisplay the files as a flat list.\nThis can be toggled from within Lazygit with the '`' key, but that will\nnot change the default.",
           "default": true
         },
         "showRootItemInFileTree": {
           "type": "boolean",
-          "description": "If true, add a \"/\" root item in the file tree representing the root of the repository. It is only added when necessary, i.e. when there is more than one item at top level.",
+          "description": "If true, add a \"/\" root item in the file tree representing the root of\nthe repository. It is only added when necessary, i.e. when there is more\nthan one item at top level.",
           "default": true
         },
         "showNumstatInFilesView": {
@@ -637,7 +637,7 @@
         },
         "showBottomLine": {
           "type": "boolean",
-          "description": "If true, show the bottom line that contains keybinding info and useful buttons. If false, this line will be hidden except to display a loader for an in-progress action.",
+          "description": "If true, show the bottom line that contains keybinding info and useful\nbuttons. If false, this line will be hidden except to display a loader\nfor an in-progress action.",
           "default": true
         },
         "showPanelJumps": {
@@ -661,17 +661,17 @@
         },
         "showFileIcons": {
           "type": "boolean",
-          "description": "If true (default), file icons are shown in the file views. Only relevant if NerdFontsVersion is not empty.",
+          "description": "If true (default), file icons are shown in the file views. Only relevant\nif NerdFontsVersion is not empty.",
           "default": true
         },
         "commitAuthorShortLength": {
           "type": "integer",
-          "description": "Length of author name in (non-expanded) commits view. 2 means show initials only.",
+          "description": "Length of author name in (non-expanded) commits view. 2 means show\ninitials only.",
           "default": 2
         },
         "commitAuthorLongLength": {
           "type": "integer",
-          "description": "Length of author name in expanded commits view. 2 means show initials only.",
+          "description": "Length of author name in expanded commits view. 2 means show\ninitials only.",
           "default": 17
         },
         "commitHashLength": {
@@ -707,7 +707,7 @@
             "auto",
             "always"
           ],
-          "description": "Whether to split the main window when viewing file changes.\nOne of: 'auto' | 'always'\nIf 'auto', only split the main window when a file has both staged and unstaged changes",
+          "description": "Whether to split the main window when viewing file changes.\nOne of: 'auto' | 'always'\nIf 'auto', only split the main window when a file has both staged and\nunstaged changes",
           "default": "auto"
         },
         "screenMode": {
@@ -717,7 +717,7 @@
             "half",
             "full"
           ],
-          "description": "Default size for focused window. Can be changed from within Lazygit with '+' and '_' (but this won't change the default).\nOne of: 'normal' (default) | 'half' | 'full'",
+          "description": "Default size for focused window. Can be changed from within Lazygit\nwith '+' and '_' (but this won't change the default).\nOne of: 'normal' (default) | 'half' | 'full'",
           "default": "normal"
         },
         "border": {
@@ -734,7 +734,7 @@
         },
         "animateExplosion": {
           "type": "boolean",
-          "description": "If true, show a seriously epic explosion animation when nuking the working tree.",
+          "description": "If true, show a seriously epic explosion animation when nuking the\nworking tree.",
           "default": true
         },
         "portraitMode": {
@@ -776,7 +776,7 @@
         },
         "switchTabsWithPanelJumpKeys": {
           "type": "boolean",
-          "description": "If true, when using the panel jump keys (default 1 through 5) and target panel is already active, go to next tab instead",
+          "description": "If true, when using the panel jump keys (default 1 through 5) and target\npanel is already active, go to next tab instead",
           "default": false
         }
       },
@@ -1548,7 +1548,7 @@
             "topo-order",
             "default"
           ],
-          "description": "One of: 'date-order' | 'author-date-order' | 'topo-order' | 'default'\n'topo-order' makes it easier to read the git log graph, but commits may not\nappear chronologically. See https://git-scm.com/docs/\n\nCan be changed from within Lazygit with `Log menu -\u003e Commit sort order` (`\u003cc-l\u003e` in the commits window by default).",
+          "description": "One of: 'date-order' | 'author-date-order' | 'topo-order' | 'default'\n'topo-order' makes it easier to read the git log graph, but commits may\nnot appear chronologically. See https://git-scm.com/docs/\n\nCan be changed from within Lazygit with `Log menu -\u003e Commit sort order`\n(`\u003cc-l\u003e` in the commits window by default).",
           "default": "topo-order"
         },
         "showGraph": {
@@ -1558,12 +1558,12 @@
             "never",
             "when-maximised"
           ],
-          "description": "This determines whether the git graph is rendered in the commits panel\nOne of 'always' | 'never' | 'when-maximised'\n\nCan be toggled from within lazygit with `Log menu -\u003e Show git graph` (`\u003cc-l\u003e` in the commits window by default).",
+          "description": "This determines whether the git graph is rendered in the commits panel\nOne of 'always' | 'never' | 'when-maximised'\n\nCan be toggled from within lazygit with `Log menu -\u003e Show git graph`\n(`\u003cc-l\u003e` in the commits window by default).",
           "default": "always"
         },
         "showWholeGraph": {
           "type": "boolean",
-          "description": "displays the whole git graph by default in the commits view (equivalent to passing the `--all` argument to `git log`)",
+          "description": "displays the whole git graph by default in the commits view (equivalent\nto passing the `--all` argument to `git log`)",
           "default": false
         }
       },
@@ -1575,7 +1575,7 @@
       "properties": {
         "manualCommit": {
           "type": "boolean",
-          "description": "If true, run merges in a subprocess so that if a commit message is required, Lazygit will not hang\nOnly applicable to unix users.",
+          "description": "If true, run merges in a subprocess so that if a commit message is\nrequired, Lazygit will not hang.\nOnly applicable to unix users.",
           "default": false
         },
         "args": {
@@ -1587,7 +1587,7 @@
         },
         "squashMergeMessage": {
           "type": "string",
-          "description": "The commit message to use for a squash merge commit. Can contain \"{{selectedRef}}\" and \"{{currentBranch}}\" placeholders.",
+          "description": "The commit message to use for a squash merge commit. Can contain\n\"{{selectedRef}}\" and \"{{currentBranch}}\" placeholders.",
           "default": "Squash merge {{selectedRef}} into {{currentBranch}}"
         }
       },
@@ -1652,12 +1652,12 @@
         },
         "shellFunctionsFile": {
           "type": "string",
-          "description": "A shell startup file containing shell aliases or shell functions. This will be sourced before running any shell commands, so that shell functions are available in the `:` command prompt or even in custom commands.\nSee https://github.com/jesseduffield/lazygit/blob/master/docs/Config.md#using-aliases-or-functions-in-shell-commands"
+          "description": "A shell startup file containing shell aliases or shell functions. This\nwill be sourced before running any shell commands, so that shell\nfunctions are available in the `:` command prompt or even in custom\ncommands.\nSee https://github.com/jesseduffield/lazygit/blob/master/docs/Config.md#using-aliases-or-functions-in-shell-commands"
         }
       },
       "additionalProperties": false,
       "type": "object",
-      "description": "Config relating to things outside of Lazygit like how files are opened, copying to clipboard, etc"
+      "description": "Config relating to things outside of Lazygit like how files are opened,\ncopying to clipboard, etc"
     },
     "PagingConfig": {
       "properties": {
@@ -1667,7 +1667,7 @@
             "always",
             "never"
           ],
-          "description": "Value of the --color arg in the git diff command. Some pagers want this to be set to 'always' and some want it set to 'never'",
+          "description": "Value of the --color arg in the git diff command. Some pagers want this\nto be set to 'always' and some want it set to 'never'",
           "default": "always"
         },
         "pager": {
@@ -1686,7 +1686,7 @@
         },
         "useExternalDiffGitConfig": {
           "type": "boolean",
-          "description": "If true, Lazygit will use git's `diff.external` config for paging. The advantage over `externalDiffCommand` is that this can be configured per file type in .gitattributes; see https://git-scm.com/docs/gitattributes#_defining_an_external_diff_driver.",
+          "description": "If true, Lazygit will use git's `diff.external` config for paging. The\nadvantage over `externalDiffCommand` is that this can be configured per\nfile type in .gitattributes; see\nhttps://git-scm.com/docs/gitattributes#_defining_an_external_diff_driver.",
           "default": false
         }
       },
@@ -1936,12 +1936,12 @@
         },
         "quitOnTopLevelReturn": {
           "type": "boolean",
-          "description": "If true, exit Lazygit when the user presses escape in a context where there is nothing to cancel/close",
+          "description": "If true, exit Lazygit when the user presses escape in a context where\nthere is nothing to cancel/close",
           "default": false
         },
         "os": {
           "$ref": "#/$defs/OSConfig",
-          "description": "Config relating to things outside of Lazygit like how files are opened, copying to clipboard, etc"
+          "description": "Config relating to things outside of Lazygit like how files are opened,\ncopying to clipboard, etc"
         },
         "disableStartupPopups": {
           "type": "boolean",
@@ -1971,12 +1971,12 @@
             "skip",
             "quit"
           ],
-          "description": "What to do when opening Lazygit outside of a git repo.\n- 'prompt': (default) ask whether to initialize a new repo or open in the most recent repo\n- 'create': initialize a new repo\n- 'skip': open most recent repo\n- 'quit': exit Lazygit",
+          "description": "What to do when opening Lazygit outside of a git repo.\n- 'prompt': (default) ask whether to initialize a new repo or open in\n            the most recent repo\n- 'create': initialize a new repo\n- 'skip': open most recent repo\n- 'quit': exit Lazygit",
           "default": "prompt"
         },
         "promptToReturnFromSubprocess": {
           "type": "boolean",
-          "description": "If true, display a confirmation when subprocess terminates. This allows you to view the output of the subprocess before returning to Lazygit.",
+          "description": "If true, display a confirmation when subprocess terminates. This allows\nyou to view the output of the subprocess before returning to Lazygit.",
           "default": true
         },
         "keybinding": {
