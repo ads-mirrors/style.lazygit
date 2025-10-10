@@ -49,8 +49,7 @@ gui:
     # Map of filenames to icon properties (icon and color)
     filenames: {}
 
-    # Map of file extensions (including the dot) to icon properties
-    # (icon and color)
+    # Map of file extensions (including the dot) to icon properties (icon and color)
     extensions: {}
 
   # The number of lines you scroll by when scrolling the main window
@@ -65,15 +64,12 @@ gui:
   # One of: 'margin' (default) | 'jump'
   scrollOffBehavior: margin
 
-  # The number of spaces per tab; used for everything that's shown in the
-  # main view, but probably mostly relevant for diffs.
-  # Note that when using a pager, the pager has its own tab width setting,
-  # so you need to pass it separately in the pager command.
+  # The number of spaces per tab; used for everything that's shown in the main view, but probably mostly relevant for diffs.
+  # Note that when using a pager, the pager has its own tab width setting, so you need to pass it separately in the pager command.
   tabWidth: 4
 
   # If true, capture mouse events.
-  # When mouse events are captured, it's a little harder to select text: e.g.
-  # requiring you to hold the option key when on macOS.
+  # When mouse events are captured, it's a little harder to select text: e.g. requiring you to hold the option key when on macOS.
   mouseEvents: true
 
   # If true, do not show a warning when amending a commit.
@@ -85,43 +81,33 @@ gui:
   # If true, do not show warning when applying/popping the stash
   skipStashWarning: false
 
-  # If true, do not show a warning when attempting to commit without any staged
-  # files; instead stage all unstaged files.
+  # If true, do not show a warning when attempting to commit without any staged files; instead stage all unstaged files.
   skipNoStagedFilesWarning: false
 
   # If true, do not show a warning when rewording a commit via an external editor
   skipRewordInEditorWarning: false
 
-  # Fraction of the total screen width to use for the left side section.
-  # You may want to pick a small number (e.g. 0.2) if you're using a narrow
-  # screen, so that you can see more of the main section.
+  # Fraction of the total screen width to use for the left side section. You may want to pick a small number (e.g. 0.2) if you're using a narrow screen, so that you can see more of the main section.
   # Number from 0 to 1.0.
   sidePanelWidth: 0.3333
 
-  # If true, increase the height of the focused side window; creating an
-  # accordion effect.
+  # If true, increase the height of the focused side window; creating an accordion effect.
   expandFocusedSidePanel: false
 
-  # The weight of the expanded side panel, relative to the other panels.
-  # 2 means twice as tall as the other panels. Only relevant if
-  # `expandFocusedSidePanel` is true.
+  # The weight of the expanded side panel, relative to the other panels. 2 means
+  # twice as tall as the other panels. Only relevant if `expandFocusedSidePanel` is true.
   expandedSidePanelWeight: 2
 
-  # Sometimes the main window is split in two (e.g. when the selected file
-  # has both staged and unstaged changes). This setting controls how the
-  # two sections are split.
+  # Sometimes the main window is split in two (e.g. when the selected file has both staged and unstaged changes). This setting controls how the two sections are split.
   # Options are:
   # - 'horizontal': split the window horizontally
   # - 'vertical': split the window vertically
-  # - 'flexible': (default) split the window horizontally if the window is
-  #               wide enough, otherwise split vertically
+  # - 'flexible': (default) split the window horizontally if the window is wide enough, otherwise split vertically
   mainPanelSplitMode: flexible
 
-  # How the window is split when in half screen mode (i.e. after hitting
-  # '+' once).
+  # How the window is split when in half screen mode (i.e. after hitting '+' once).
   # Possible values:
-  # - 'left': split the window horizontally (side panel on the left, main
-  #           view on the right)
+  # - 'left': split the window horizontally (side panel on the left, main view on the right)
   # - 'top': split the window vertically (side panel on top, main view below)
   enlargedSideViewLocation: left
 
@@ -130,11 +116,10 @@ gui:
   # paragraphs of markdown text.
   wrapLinesInStagingView: true
 
-  # If true, hunk selection mode will be enabled by default when entering
-  # the staging view.
+  # If true, hunk selection mode will be enabled by default when entering the staging view.
   useHunkModeInStagingView: true
 
-  # One of 'auto' (default) | 'en' | 'zh-CN' | 'zh-TW' | 'pl' | 'nl' | 'ja' | 'ko' | 'ru' | 'pt'
+  # One of 'auto' (default) | 'en' | 'zh-CN' | 'zh-TW' | 'pl' | 'nl' | 'ja' | 'ko' | 'ru'
   language: auto
 
   # Format used when displaying time e.g. commit time.
@@ -207,15 +192,11 @@ gui:
   # If true, show the '5 of 20' footer at the bottom of list views
   showListFooter: true
 
-  # If true, display the files in the file views as a tree. If false,
-  # display the files as a flat list.
-  # This can be toggled from within Lazygit with the '`' key, but that will
-  # not change the default.
+  # If true, display the files in the file views as a tree. If false, display the files as a flat list.
+  # This can be toggled from within Lazygit with the '`' key, but that will not change the default.
   showFileTree: true
 
-  # If true, add a "/" root item in the file tree representing the root of
-  # the repository. It is only added when necessary, i.e. when there is more
-  # than one item at top level.
+  # If true, add a "/" root item in the file tree representing the root of the repository. It is only added when necessary, i.e. when there is more than one item at top level.
   showRootItemInFileTree: true
 
   # If true, show the number of lines changed per file in the Files view
@@ -227,9 +208,7 @@ gui:
   # If true, show the command log
   showCommandLog: true
 
-  # If true, show the bottom line that contains keybinding info and useful
-  # buttons. If false, this line will be hidden except to display a loader
-  # for an in-progress action.
+  # If true, show the bottom line that contains keybinding info and useful buttons. If false, this line will be hidden except to display a loader for an in-progress action.
   showBottomLine: true
 
   # If true, show jump-to-window keybindings in window titles.
@@ -240,16 +219,13 @@ gui:
   # If empty, do not show icons.
   nerdFontsVersion: ""
 
-  # If true (default), file icons are shown in the file views. Only relevant
-  # if NerdFontsVersion is not empty.
+  # If true (default), file icons are shown in the file views. Only relevant if NerdFontsVersion is not empty.
   showFileIcons: true
 
-  # Length of author name in (non-expanded) commits view. 2 means show
-  # initials only.
+  # Length of author name in (non-expanded) commits view. 2 means show initials only.
   commitAuthorShortLength: 2
 
-  # Length of author name in expanded commits view. 2 means show
-  # initials only.
+  # Length of author name in expanded commits view. 2 means show initials only.
   commitAuthorLongLength: 17
 
   # Length of commit hash in commits view. 0 shows '*' if NF icons aren't on.
@@ -267,12 +243,10 @@ gui:
 
   # Whether to split the main window when viewing file changes.
   # One of: 'auto' | 'always'
-  # If 'auto', only split the main window when a file has both staged and
-  # unstaged changes
+  # If 'auto', only split the main window when a file has both staged and unstaged changes
   splitDiff: auto
 
-  # Default size for focused window. Can be changed from within Lazygit
-  # with '+' and '_' (but this won't change the default).
+  # Default size for focused window. Can be changed from within Lazygit with '+' and '_' (but this won't change the default).
   # One of: 'normal' (default) | 'half' | 'full'
   screenMode: normal
 
@@ -280,8 +254,7 @@ gui:
   # One of 'rounded' (default) | 'single' | 'double' | 'hidden' | 'bold'
   border: rounded
 
-  # If true, show a seriously epic explosion animation when nuking the
-  # working tree.
+  # If true, show a seriously epic explosion animation when nuking the working tree.
   animateExplosion: true
 
   # Whether to stack UI components on top of each other.
@@ -314,16 +287,14 @@ gui:
   # If true, jump to the Files panel after applying a stash
   switchToFilesAfterStashApply: true
 
-  # If true, when using the panel jump keys (default 1 through 5) and target
-  # panel is already active, go to next tab instead
+  # If true, when using the panel jump keys (default 1 through 5) and target panel is already active, go to next tab instead
   switchTabsWithPanelJumpKeys: false
 
 # Config relating to git
 git:
   # See https://github.com/jesseduffield/lazygit/blob/master/docs/Custom_Pagers.md
   paging:
-    # Value of the --color arg in the git diff command. Some pagers want this
-    # to be set to 'always' and some want it set to 'never'
+    # Value of the --color arg in the git diff command. Some pagers want this to be set to 'always' and some want it set to 'never'
     colorArg: always
 
     # e.g.
@@ -335,10 +306,7 @@ git:
     # e.g. 'difft --color=always'
     externalDiffCommand: ""
 
-    # If true, Lazygit will use git's `diff.external` config for paging. The
-    # advantage over `externalDiffCommand` is that this can be configured per
-    # file type in .gitattributes; see
-    # https://git-scm.com/docs/gitattributes#_defining_an_external_diff_driver.
+    # If true, Lazygit will use git's `diff.external` config for paging. The advantage over `externalDiffCommand` is that this can be configured per file type in .gitattributes; see https://git-scm.com/docs/gitattributes#_defining_an_external_diff_driver.
     useExternalDiffGitConfig: false
 
   # Config relating to committing
@@ -354,26 +322,22 @@ git:
 
   # Config relating to merging
   merging:
-    # If true, run merges in a subprocess so that if a commit message is
-    # required, Lazygit will not hang.
+    # If true, run merges in a subprocess so that if a commit message is required, Lazygit will not hang
     # Only applicable to unix users.
     manualCommit: false
 
     # Extra args passed to `git merge`, e.g. --no-ff
     args: ""
 
-    # The commit message to use for a squash merge commit. Can contain
-    # "{{selectedRef}}" and "{{currentBranch}}" placeholders.
+    # The commit message to use for a squash merge commit. Can contain "{{selectedRef}}" and "{{currentBranch}}" placeholders.
     squashMergeMessage: Squash merge {{selectedRef}} into {{currentBranch}}
 
-  # list of branches that are considered 'main' branches, used when
-  # displaying commits
+  # list of branches that are considered 'main' branches, used when displaying commits
   mainBranches:
     - master
     - main
 
-  # Prefix to use when skipping hooks. E.g. if set to 'WIP', then pre-commit
-  # hooks will be skipped when the commit message starts with 'WIP'
+  # Prefix to use when skipping hooks. E.g. if set to 'WIP', then pre-commit hooks will be skipped when the commit message starts with 'WIP'
   skipHookPrefix: WIP
 
   # If true, periodically fetch from remote
@@ -382,10 +346,7 @@ git:
   # If true, periodically refresh files and submodules
   autoRefresh: true
 
-  # If not "none", lazygit will automatically fast-forward local branches
-  # to match their upstream after fetching. Applies to branches that are not
-  # the currently checked out branch, and only to those that are strictly
-  # behind their upstream (as opposed to diverged).
+  # If not "none", lazygit will automatically fast-forward local branches to match their upstream after fetching. Applies to branches that are not the currently checked out branch, and only to those that are strictly behind their upstream (as opposed to diverged).
   # Possible values: 'none' | 'onlyMainBranches' | 'allBranches'
   autoForwardBranches: onlyMainBranches
 
@@ -401,22 +362,17 @@ git:
   # Command used when displaying the current branch git log in the main window
   branchLogCmd: git log --graph --color=always --abbrev-commit --decorate --date=relative --pretty=medium {{branchName}} --
 
-  # Commands used to display git log of all branches in the main window,
-  # they will be cycled in order of appearance (array of strings)
+  # Commands used to display git log of all branches in the main window, they will be cycled in order of appearance (array of strings)
   allBranchesLogCmds:
     - git log --graph --all --color=always --abbrev-commit --decorate --date=relative  --pretty=medium
 
-  # If true, git diffs are rendered with the `--ignore-all-space` flag,
-  # which ignores whitespace changes. Can be toggled from within Lazygit
-  # with `<c-w>`.
+  # If true, git diffs are rendered with the `--ignore-all-space` flag, which ignores whitespace changes. Can be toggled from within Lazygit with `<c-w>`.
   ignoreWhitespaceInDiffView: false
 
-  # The number of lines of context to show around each diff hunk. Can be
-  # changed from within Lazygit with the `{` and `}` keys.
+  # The number of lines of context to show around each diff hunk. Can be changed from within Lazygit with the `{` and `}` keys.
   diffContextSize: 3
 
-  # The threshold for considering a file to be renamed, in percent. Can be
-  # changed from within Lazygit with the `(` and `)` keys.
+  # The threshold for considering a file to be renamed, in percent. Can be changed from within Lazygit with the `(` and `)` keys.
   renameSimilarityThreshold: 50
 
   # If true, do not spawn a separate process when using GPG
@@ -441,34 +397,29 @@ git:
   # Config for showing the log in the commits view
   log:
     # One of: 'date-order' | 'author-date-order' | 'topo-order' | 'default'
-    # 'topo-order' makes it easier to read the git log graph, but commits may
-    # not appear chronologically. See https://git-scm.com/docs/
+    # 'topo-order' makes it easier to read the git log graph, but commits may not
+    # appear chronologically. See https://git-scm.com/docs/
     #
-    # Can be changed from within Lazygit with `Log menu -> Commit sort order`
-    # (`<c-l>` in the commits window by default).
+    # Can be changed from within Lazygit with `Log menu -> Commit sort order` (`<c-l>` in the commits window by default).
     order: topo-order
 
     # This determines whether the git graph is rendered in the commits panel
     # One of 'always' | 'never' | 'when-maximised'
     #
-    # Can be toggled from within lazygit with `Log menu -> Show git graph`
-    # (`<c-l>` in the commits window by default).
+    # Can be toggled from within lazygit with `Log menu -> Show git graph` (`<c-l>` in the commits window by default).
     showGraph: always
 
-    # displays the whole git graph by default in the commits view (equivalent
-    # to passing the `--all` argument to `git log`)
+    # displays the whole git graph by default in the commits view (equivalent to passing the `--all` argument to `git log`)
     showWholeGraph: false
 
   # How branches are sorted in the local branches view.
   # One of: 'date' (default) | 'recency' | 'alphabetical'
-  # Can be changed from within Lazygit with the Sort Order menu (`s`) in
-  # the branches panel.
+  # Can be changed from within Lazygit with the Sort Order menu (`s`) in the branches panel.
   localBranchSortOrder: date
 
   # How branches are sorted in the remote branches view.
   # One of: 'date' (default) | 'alphabetical'
-  # Can be changed from within Lazygit with the Sort Order menu (`s`) in
-  # the remote branches panel.
+  # Can be changed from within Lazygit with the Sort Order menu (`s`) in the remote branches panel.
   remoteBranchSortOrder: date
 
   # When copying commit hashes to the clipboard, truncate them to this
@@ -496,12 +447,10 @@ refresher:
 # If true, show a confirmation popup before quitting Lazygit
 confirmOnQuit: false
 
-# If true, exit Lazygit when the user presses escape in a context where
-# there is nothing to cancel/close
+# If true, exit Lazygit when the user presses escape in a context where there is nothing to cancel/close
 quitOnTopLevelReturn: false
 
-# Config relating to things outside of Lazygit like how files are opened,
-# copying to clipboard, etc
+# Config relating to things outside of Lazygit like how files are opened, copying to clipboard, etc
 os:
   # Command for editing a file. Should contain "{{filename}}".
   edit: ""
@@ -539,10 +488,7 @@ os:
   # See https://github.com/jesseduffield/lazygit/blob/master/docs/Config.md#custom-command-for-copying-to-and-pasting-from-clipboard
   readFromClipboardCmd: ""
 
-  # A shell startup file containing shell aliases or shell functions. This
-  # will be sourced before running any shell commands, so that shell
-  # functions are available in the `:` command prompt or even in custom
-  # commands.
+  # A shell startup file containing shell aliases or shell functions. This will be sourced before running any shell commands, so that shell functions are available in the `:` command prompt or even in custom commands.
   # See https://github.com/jesseduffield/lazygit/blob/master/docs/Config.md#using-aliases-or-functions-in-shell-commands
   shellFunctionsFile: ""
 
@@ -557,15 +503,13 @@ customCommands: []
 services: {}
 
 # What to do when opening Lazygit outside of a git repo.
-# - 'prompt': (default) ask whether to initialize a new repo or open in
-#             the most recent repo
+# - 'prompt': (default) ask whether to initialize a new repo or open in the most recent repo
 # - 'create': initialize a new repo
 # - 'skip': open most recent repo
 # - 'quit': exit Lazygit
 notARepository: prompt
 
-# If true, display a confirmation when subprocess terminates. This allows
-# you to view the output of the subprocess before returning to Lazygit.
+# If true, display a confirmation when subprocess terminates. This allows you to view the output of the subprocess before returning to Lazygit.
 promptToReturnFromSubprocess: true
 
 # Keybindings
